@@ -1,0 +1,262 @@
+{
+  "Laptop": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 650.00
+  },
+  "Mouse": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 15.00
+  },
+  "Desk": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 180.00
+  },
+  "Keyboard": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 45.00
+  },
+  "Chair": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 90.00
+  },
+  "Monitor": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 130.00
+  },
+  "Monitor Stand": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 25.00
+  },
+  "USB Cable": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 4.00
+  },
+  "Webcam": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 55.00
+  },
+  "Headset": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 80.00
+  },
+  "Desk Lamp": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 28.00
+  },
+  "Office Desk": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 280.00
+  },
+  "Office Chair": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 210.00
+  },
+  "Notebook": {
+    "category": "Stationery",
+    "vatRate": 0.19,
+    "cost": 2.00
+  },
+  "Pen Set": {
+    "category": "Stationery",
+    "vatRate": 0.19,
+    "cost": 6.00
+  },
+  "Mouse Pad": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 7.00
+  },
+  "Laptop Sleeve": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 18.00
+  },
+  "SSD": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 95.00
+  },
+  "External HDD": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 65.00
+  },
+  "Router": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 115.00
+  },
+  "Switch": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 160.00
+  },
+  "Coffee Table": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 130.00
+  },
+  "Sofa": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 600.00
+  },
+  "Bookshelf": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 85.00
+  },
+  "Rug": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 55.00
+  },
+  "Wall Clock": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 30.00
+  },
+  "Printer": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 200.00
+  },
+  "Ink Cartridge": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 22.00
+  },
+  "Scanner": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 135.00
+  },
+  "Paper Pack": {
+    "category": "Stationery",
+    "vatRate": 0.19,
+    "cost": 3.50
+  },
+  "Whiteboard": {
+    "category": "Stationery",
+    "vatRate": 0.19,
+    "cost": 55.00
+  },
+  "Marker Set": {
+    "category": "Stationery",
+    "vatRate": 0.19,
+    "cost": 8.00
+  },
+  "Stapler": {
+    "category": "Stationery",
+    "vatRate": 0.19,
+    "cost": 5.00
+  },
+  "Monitor Arm": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 85.00
+  },
+  "Laptop Stand": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 40.00
+  },
+  "Tablet": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 350.00
+  },
+  "Stylus": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 50.00
+  },
+  "Smartphone": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 500.00
+  },
+  "Phone Case": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 10.00
+  },
+  "Power Bank": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 30.00
+  },
+  "Charger": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 18.00
+  },
+  "HDMI Cable": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 8.00
+  },
+  "TV": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 650.00
+  },
+  "Soundbar": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 210.00
+  },
+  "Remote": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 22.00
+  },
+  "Game Console": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 350.00
+  },
+  "Game Controller": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 45.00
+  },
+  "VR Headset": {
+    "category": "Electronics",
+    "vatRate": 0.19,
+    "cost": 280.00
+  },
+  "Desk Organizer": {
+    "category": "Stationery",
+    "vatRate": 0.19,
+    "cost": 15.00
+  },
+  "Filing Cabinet": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 180.00
+  },
+  "Books": {
+    "category": "Furniture",
+    "vatRate": 0.19,
+    "cost": 12.00
+  },
+  "Calendar": {
+    "category": "Stationery",
+    "vatRate": 0.19,
+    "cost": 4.00
+  }
+}

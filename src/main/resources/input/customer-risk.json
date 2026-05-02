@@ -1,0 +1,4 @@
+{
+  "CUST-001": { "riskScore": 82, "segment": "high_value" },
+  "CUST-002": { "riskScore": 15, "segment": "low_value" }
+}

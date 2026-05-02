@@ -1,0 +1,36 @@
+logging:
+  level:
+    root: INFO
+    com.example.myBatchDemo: INFO
+    org.springframework.batch: INFO
+
+spring:
+  application:
+    name: myBatchDemo
+
+  batch:
+    job:
+      enabled: true
+      name: revenueSummaryJob
+    JDBC:
+      initialize-schema: always
+
+  datasource:
+    # Works locally and in Docker because Dockerfile uses WORKDIR /app
+    # http://localhost:8080/h2-console und angeben: jdbc:h2:file:./data/testdb
+    url: jdbc:h2:file:./data/testdb;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL;DATABASE_TO_UPPER=false
+    driver-class-name: org.h2.Driver
+    username: dataprocessing
+    password: password
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    clean-disabled: false
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
