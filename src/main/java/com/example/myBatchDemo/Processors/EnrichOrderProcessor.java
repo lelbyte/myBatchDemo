@@ -1,8 +1,8 @@
 package com.example.myBatchDemo.Processors;
 
 import com.example.myBatchDemo.APIs.ProductCatalogLookup;
-import com.example.myBatchDemo.DTOs.AmazonOrder;
-import com.example.myBatchDemo.DTOs.AmazonOrderEnriched;
+import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
+import com.example.myBatchDemo.DTOs.AmazonOrderEnrichedDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 @Component
-public class EnrichOrderProcessor implements ItemProcessor<AmazonOrder, AmazonOrderEnriched> {
+public class EnrichOrderProcessor implements ItemProcessor<AmazonOrderDTO, AmazonOrderEnrichedDTO> {
 
     private static final BigDecimal ZERO = BigDecimal.ZERO;
 
@@ -37,7 +37,7 @@ public class EnrichOrderProcessor implements ItemProcessor<AmazonOrder, AmazonOr
 
     @Override
     @Nullable
-    public AmazonOrderEnriched process(@NonNull AmazonOrder order) {
+    public AmazonOrderEnrichedDTO process(@NonNull AmazonOrderDTO order) {
 
         // Log-Ausgabe fuer Multi-Threading
         LOGGER.info("[ENRICH PROC] step={} thread={} orderId={} customerId={} product={}",
@@ -86,7 +86,7 @@ public class EnrichOrderProcessor implements ItemProcessor<AmazonOrder, AmazonOr
         // If your enriched table stores unit cost + margin, keep as is.
         // If you want to store total cost instead of unit cost, adjust DTO/table accordingly.
 
-        return new AmazonOrderEnriched(
+        return new AmazonOrderEnrichedDTO(
                 order.getOrderId(),
                 order.getCustomerId(),
                 product,

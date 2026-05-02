@@ -1,7 +1,7 @@
 package com.example.myBatchDemo.Configs;
 
-import com.example.myBatchDemo.DTOs.AmazonOrder;
-import com.example.myBatchDemo.DTOs.AmazonOrderEnriched;
+import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
+import com.example.myBatchDemo.DTOs.AmazonOrderEnrichedDTO;
 import com.example.myBatchDemo.Processors.EnrichOrderProcessor;
 import com.example.myBatchDemo.Writers.AmazonOrderEnrichmentWriter;
 import org.springframework.batch.integration.async.AsyncItemProcessor;
@@ -17,21 +17,21 @@ import org.springframework.core.task.TaskExecutor;
 public class EnrichmentAsyncConfig {
 
     @Bean(name = "asyncEnrichOrderProcessor")
-    public AsyncItemProcessor<AmazonOrder, AmazonOrderEnriched> asyncEnrichOrderProcessor(
+    public AsyncItemProcessor<AmazonOrderDTO, AmazonOrderEnrichedDTO> asyncEnrichOrderProcessor(
             EnrichOrderProcessor enrichOrderProcessor,
             TaskExecutor threadPoolTaskExecutorMultiThread) {
 
-        AsyncItemProcessor<AmazonOrder, AmazonOrderEnriched> p = new AsyncItemProcessor<>();
+        AsyncItemProcessor<AmazonOrderDTO, AmazonOrderEnrichedDTO> p = new AsyncItemProcessor<>();
         p.setDelegate(enrichOrderProcessor);
         p.setTaskExecutor(threadPoolTaskExecutorMultiThread);
         return p;
     }
 
     @Bean(name = "asyncAmazonOrderEnrichmentWriter")
-    public AsyncItemWriter<AmazonOrderEnriched> asyncAmazonOrderEnrichmentWriter(
+    public AsyncItemWriter<AmazonOrderEnrichedDTO> asyncAmazonOrderEnrichmentWriter(
             AmazonOrderEnrichmentWriter amazonOrderEnrichmentWriter) {
 
-        AsyncItemWriter<AmazonOrderEnriched> w = new AsyncItemWriter<>();
+        AsyncItemWriter<AmazonOrderEnrichedDTO> w = new AsyncItemWriter<>();
         w.setDelegate(amazonOrderEnrichmentWriter);
         return w;
     }

@@ -1,6 +1,6 @@
 package com.example.myBatchDemo.Processors;
 
-import com.example.myBatchDemo.DTOs.AmazonOrder;
+import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,7 +13,7 @@ import java.util.Set;
 @Component
 @StepScope
 @Qualifier("validateAmazonOrderProcessor")
-public class ValidateAmazonOrderProcessor implements ItemProcessor<AmazonOrder, AmazonOrder> {
+public class ValidateAmazonOrderProcessor implements ItemProcessor<AmazonOrderDTO, AmazonOrderDTO> {
 
     private static final Set<String> ALLOWED_STATUSES = Set.of(
             "COMPLETED",
@@ -22,7 +22,7 @@ public class ValidateAmazonOrderProcessor implements ItemProcessor<AmazonOrder, 
     );
 
     @Override
-    public AmazonOrder process(AmazonOrder item) {
+    public AmazonOrderDTO process(AmazonOrderDTO item) {
 
         if (item == null) {
             return null;
@@ -33,31 +33,31 @@ public class ValidateAmazonOrderProcessor implements ItemProcessor<AmazonOrder, 
         return validate(item);
     }
 
-    private void normalizeAndTrim(AmazonOrder amazonOrder) {
+    private void normalizeAndTrim(AmazonOrderDTO amazonOrderDTO) {
 
-        if (amazonOrder.getCustomerId() != null) {
-            amazonOrder.setCustomerId(amazonOrder.getCustomerId().trim().toUpperCase());
+        if (amazonOrderDTO.getCustomerId() != null) {
+            amazonOrderDTO.setCustomerId(amazonOrderDTO.getCustomerId().trim().toUpperCase());
         }
 
-        if (amazonOrder.getProduct() != null) {
-            amazonOrder.setProduct(amazonOrder.getProduct().trim());
+        if (amazonOrderDTO.getProduct() != null) {
+            amazonOrderDTO.setProduct(amazonOrderDTO.getProduct().trim());
         }
 
-        if (amazonOrder.getCategory() != null) {
-            amazonOrder.setCategory(amazonOrder.getCategory().trim().toUpperCase());
+        if (amazonOrderDTO.getCategory() != null) {
+            amazonOrderDTO.setCategory(amazonOrderDTO.getCategory().trim().toUpperCase());
         }
 
-        if (amazonOrder.getStatus() != null) {
-            amazonOrder.setStatus(amazonOrder.getStatus().trim().toUpperCase());
+        if (amazonOrderDTO.getStatus() != null) {
+            amazonOrderDTO.setStatus(amazonOrderDTO.getStatus().trim().toUpperCase());
         }
 
-        if (amazonOrder.getPrice() != null) {
-            amazonOrder.setPrice(amazonOrder.getPrice().setScale(2, RoundingMode.HALF_UP));
+        if (amazonOrderDTO.getPrice() != null) {
+            amazonOrderDTO.setPrice(amazonOrderDTO.getPrice().setScale(2, RoundingMode.HALF_UP));
         }
     }
 
     // if this methods returns null, it means the element is not valid and has to be skipped.
-    private AmazonOrder validate(AmazonOrder o) {
+    private AmazonOrderDTO validate(AmazonOrderDTO o) {
         // orderId
         if (o.getOrderId() == null || o.getOrderId() <= 0) {
             return null;

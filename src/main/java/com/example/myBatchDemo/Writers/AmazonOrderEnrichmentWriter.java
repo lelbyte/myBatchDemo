@@ -1,6 +1,6 @@
 package com.example.myBatchDemo.Writers;
 
-import com.example.myBatchDemo.DTOs.AmazonOrderEnriched;
+import com.example.myBatchDemo.DTOs.AmazonOrderEnrichedDTO;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ExecutionContext;
@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @StepScope
 @Component
-public class AmazonOrderEnrichmentWriter implements ItemStreamWriter<AmazonOrderEnriched> {
+public class AmazonOrderEnrichmentWriter implements ItemStreamWriter<AmazonOrderEnrichedDTO> {
 
     private final JdbcTemplate jdbcTemplate;
     public static final String CTX_ROWS_WRITTEN_STEP = "ordersEnrichedRowsWrittenStep";
@@ -39,7 +39,7 @@ public class AmazonOrderEnrichmentWriter implements ItemStreamWriter<AmazonOrder
     }
 
     @Override
-    public void write(@NonNull Chunk<? extends AmazonOrderEnriched> chunk) {
+    public void write(@NonNull Chunk<? extends AmazonOrderEnrichedDTO> chunk) {
 
         // H2 UPSERT pattern using MERGE
         // Assumes orders_enriched has PK(order_id)
@@ -54,7 +54,7 @@ public class AmazonOrderEnrichmentWriter implements ItemStreamWriter<AmazonOrder
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
             """;
 
-        for (AmazonOrderEnriched o : chunk) {
+        for (AmazonOrderEnrichedDTO o : chunk) {
             jdbcTemplate.update(sql,
                     o.orderId(),
                     o.customerId(),

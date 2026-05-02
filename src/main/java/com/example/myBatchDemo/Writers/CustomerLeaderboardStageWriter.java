@@ -1,6 +1,6 @@
 package com.example.myBatchDemo.Writers;
 
-import com.example.myBatchDemo.DTOs.LeaderboardEntry;
+import com.example.myBatchDemo.DTOs.LeaderboardEntryDTO;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemStreamWriter;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 @StepScope
 @Component("customerLeaderboardStageWriter")
-public class CustomerLeaderboardStageWriter implements ItemStreamWriter<LeaderboardEntry> {
+public class CustomerLeaderboardStageWriter implements ItemStreamWriter<LeaderboardEntryDTO> {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -24,11 +24,11 @@ public class CustomerLeaderboardStageWriter implements ItemStreamWriter<Leaderbo
     }
 
     @Override
-    public void write(@NonNull Chunk<? extends LeaderboardEntry> chunk) {
+    public void write(@NonNull Chunk<? extends LeaderboardEntryDTO> chunk) {
 
         // Aggregate inside the chunk to reduce SQL calls
         Map<String, BigDecimal> sums = new HashMap<>();
-        for (LeaderboardEntry c : chunk) {
+        for (LeaderboardEntryDTO c : chunk) {
             sums.merge(c.customerId(), c.totalAmount(), BigDecimal::add);
         }
 

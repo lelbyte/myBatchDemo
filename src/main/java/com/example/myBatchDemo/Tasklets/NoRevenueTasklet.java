@@ -14,7 +14,6 @@ public class NoRevenueTasklet implements Tasklet {
     @Nullable
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        // ggf. irgendwas anderes tun, wenn kein Revenue vorhanden ist
         System.out.println(" **** Platzhalter, fuer eine Tätigkeit: ggf. irgendwas tun, wenn kein Revenue vorhanden ist ****");
         return RepeatStatus.FINISHED;
     }

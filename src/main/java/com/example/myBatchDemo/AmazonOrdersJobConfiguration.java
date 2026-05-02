@@ -103,7 +103,7 @@ public class AmazonOrdersJobConfiguration {
                                           ValidateAmazonOrderProcessor validateAmazonOrderProcessor) {
 
         return new StepBuilder("validate-and-load-orders", jobRepository)
-                .<AmazonOrder, AmazonOrder>chunk(1, transactionManager)
+                .<AmazonOrderDTO, AmazonOrderDTO>chunk(1, transactionManager)
                 .reader(amazonOrderCsvReader)
                 .processor(validateAmazonOrderProcessor)
                 .writer(amazonOrderDBWriter)
@@ -121,11 +121,11 @@ public class AmazonOrdersJobConfiguration {
                                   RevenueCSVWriter revenueCSVWriter) {
 
         // damit die zwei Writer in 1 Step aufgerufen werden können
-        CompositeItemWriter<RevenueContribution> compositeItemWriter = new CompositeItemWriter<>();
+        CompositeItemWriter<RevenueContributionDTO> compositeItemWriter = new CompositeItemWriter<>();
         compositeItemWriter.setDelegates(List.of(revenueDBWriter, revenueCSVWriter));
 
         return new StepBuilder("report-revenue-step", jobRepository)
-                .<AmazonOrder, RevenueContribution>chunk(10, transactionManager)
+                .<AmazonOrderDTO, RevenueContributionDTO>chunk(10, transactionManager)
                 .reader(amazonOrderDbReader)
                 .processor(reportRevenueProcessor)
                 .writer(compositeItemWriter)
@@ -224,7 +224,7 @@ public class AmazonOrdersJobConfiguration {
                                      CustomerLeaderboardStageWriter customerLeaderboardStageWriter, LeaderboardSlaveStepListener leaderboardSlaveStepListener) {
 
         return new StepBuilder("leaderboardSlaveStep", jobRepository)
-                .<AmazonOrder, LeaderboardEntry>chunk(5, tx)
+                .<AmazonOrderDTO, LeaderboardEntryDTO>chunk(5, tx)
                 .reader(partitionedAmazonOrderDbReader)
                 .processor(customerContributionProcessor)
                 .writer(customerLeaderboardStageWriter)
@@ -265,7 +265,7 @@ public class AmazonOrdersJobConfiguration {
                                          LeaderboardXmlWriter leaderboardXmlWriter) {
 
         return new StepBuilder("exportLeaderboardXmlStep", jobRepository)
-                .<LeaderboardEntry, LeaderboardCustomerXml>chunk(5, tx)
+                .<LeaderboardEntryDTO, LeaderboardCustomerXmlDTO>chunk(5, tx)
                 .reader(customerLeaderboardStageReader)
                 .processor(leaderboardXmlProcessor)
                 .writer(leaderboardXmlWriter)
@@ -276,12 +276,12 @@ public class AmazonOrdersJobConfiguration {
     public Step enrichOrdersStep(JobRepository jobRepository,
                                  PlatformTransactionManager transactionManager,
                                  EnrichOrdersStepListener enrichOrdersStepListener,
-                                 AsyncItemProcessor<AmazonOrder, AmazonOrderEnriched> asyncEnrichOrderProcessor,
-                                 AsyncItemWriter<AmazonOrderEnriched> asyncAmazonOrderEnrichmentWriter,
+                                 AsyncItemProcessor<AmazonOrderDTO, AmazonOrderEnrichedDTO> asyncEnrichOrderProcessor,
+                                 AsyncItemWriter<AmazonOrderEnrichedDTO> asyncAmazonOrderEnrichmentWriter,
                                  AmazonOrderDbReader amazonOrderDbReader) {
 
         return new StepBuilder("enrichOrdersStep", jobRepository)
-                .<AmazonOrder, Future<AmazonOrderEnriched>>chunk(3, transactionManager)
+                .<AmazonOrderDTO, Future<AmazonOrderEnrichedDTO>>chunk(3, transactionManager)
                 .reader(amazonOrderDbReader)
                 .processor(asyncEnrichOrderProcessor)
                 .writer(asyncAmazonOrderEnrichmentWriter)

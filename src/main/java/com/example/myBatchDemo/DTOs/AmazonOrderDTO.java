@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class AmazonOrder {
+public class AmazonOrderDTO {
 
     private Long orderId;
     private String customerId;
@@ -19,12 +19,12 @@ public class AmazonOrder {
     private LocalDate orderDate;
     private String status;
 
-    public AmazonOrder() {
+    public AmazonOrderDTO() {
 
     }
 
-    public AmazonOrder(Long orderId, String customerId, String product, String category, Integer quantity,
-                       BigDecimal price, LocalDate orderDate, String status) {
+    public AmazonOrderDTO(Long orderId, String customerId, String product, String category, Integer quantity,
+                          BigDecimal price, LocalDate orderDate, String status) {
 
         this.orderId = orderId;
         this.customerId = customerId;

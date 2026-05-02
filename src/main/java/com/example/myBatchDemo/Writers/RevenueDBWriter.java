@@ -1,7 +1,7 @@
 package com.example.myBatchDemo.Writers;
 
 import com.example.myBatchDemo.Services.RevenueTotalsAccumulatorService;
-import com.example.myBatchDemo.DTOs.RevenueContribution;
+import com.example.myBatchDemo.DTOs.RevenueContributionDTO;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemStreamWriter;
@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 @Component("revenueDBWriter")
 @StepScope
-public class RevenueDBWriter implements ItemStreamWriter<RevenueContribution> {
+public class RevenueDBWriter implements ItemStreamWriter<RevenueContributionDTO> {
 
     private final RevenueTotalsAccumulatorService accumulator;
     private final JdbcTemplate jdbcTemplate;
@@ -24,8 +24,8 @@ public class RevenueDBWriter implements ItemStreamWriter<RevenueContribution> {
     }
 
     @Override
-    public void write(@NonNull Chunk<? extends RevenueContribution> chunk) {
-        for (RevenueContribution c : chunk) {
+    public void write(@NonNull Chunk<? extends RevenueContributionDTO> chunk) {
+        for (RevenueContributionDTO c : chunk) {
             accumulator.add(c.date(), c.amount());
         }
     }

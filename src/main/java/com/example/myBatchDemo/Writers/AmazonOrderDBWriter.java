@@ -1,6 +1,6 @@
 package com.example.myBatchDemo.Writers;
 
-import com.example.myBatchDemo.DTOs.AmazonOrder;
+import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemStreamWriter;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component("amazonOrderDBWriter")
 @StepScope
-public class AmazonOrderDBWriter implements ItemStreamWriter<AmazonOrder> {
+public class AmazonOrderDBWriter implements ItemStreamWriter<AmazonOrderDTO> {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -23,8 +23,8 @@ public class AmazonOrderDBWriter implements ItemStreamWriter<AmazonOrder> {
     }
 
     @Override
-    public void write(@NonNull Chunk<? extends AmazonOrder> chunk) throws Exception {
-        List<? extends AmazonOrder> items = chunk.getItems();
+    public void write(@NonNull Chunk<? extends AmazonOrderDTO> chunk) throws Exception {
+        List<? extends AmazonOrderDTO> items = chunk.getItems();
         if (items.isEmpty()) return;
 
         jdbcTemplate.batchUpdate(

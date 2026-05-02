@@ -1,7 +1,7 @@
 package com.example.myBatchDemo.Processors;
 
-import com.example.myBatchDemo.DTOs.AmazonOrder;
-import com.example.myBatchDemo.DTOs.RevenueContribution;
+import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
+import com.example.myBatchDemo.DTOs.RevenueContributionDTO;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,11 +15,11 @@ import java.time.LocalDate;
 @Component
 @StepScope
 @Qualifier("reportRevenueProcessor")
-public class ReportRevenueProcessor implements ItemProcessor<AmazonOrder, RevenueContribution> {
+public class ReportRevenueProcessor implements ItemProcessor<AmazonOrderDTO, RevenueContributionDTO> {
 
     @Nullable
     @Override
-    public RevenueContribution process(@NonNull AmazonOrder item) {
+    public RevenueContributionDTO process(@NonNull AmazonOrderDTO item) {
 
         if (item.getStatus() == null || !"COMPLETED".equalsIgnoreCase(item.getStatus())) {
             return null; // filtered
@@ -32,7 +32,7 @@ public class ReportRevenueProcessor implements ItemProcessor<AmazonOrder, Revenu
 
         // Compute revenue contribution
         BigDecimal amount = price.multiply(BigDecimal.valueOf(qty.longValue()));
-        return new RevenueContribution(date, amount);
+        return new RevenueContributionDTO(date, amount);
 
     }
 

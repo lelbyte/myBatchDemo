@@ -1,7 +1,7 @@
 package com.example.myBatchDemo.Writers;
 
 import com.example.myBatchDemo.Services.RevenueTotalsAccumulatorService;
-import com.example.myBatchDemo.DTOs.RevenueContribution;
+import com.example.myBatchDemo.DTOs.RevenueContributionDTO;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 
 @StepScope
 @Component("revenueCSVWriter")
-public class RevenueCSVWriter implements ItemStreamWriter<RevenueContribution> {
+public class RevenueCSVWriter implements ItemStreamWriter<RevenueContributionDTO> {
 
     private final WritableResource reportRevenueOutputResource;
     private final RevenueTotalsAccumulatorService accumulator;
@@ -37,8 +37,8 @@ public class RevenueCSVWriter implements ItemStreamWriter<RevenueContribution> {
     }
 
     @Override
-    public void write(@NonNull Chunk<? extends RevenueContribution> chunk) {
-        for (RevenueContribution c : chunk) { // todo eig muss diese logic in den processor oder so
+    public void write(@NonNull Chunk<? extends RevenueContributionDTO> chunk) {
+        for (RevenueContributionDTO c : chunk) { // todo eig muss diese logic in den processor oder so
             accumulator.add(c.date(), c.amount());
         }
     }

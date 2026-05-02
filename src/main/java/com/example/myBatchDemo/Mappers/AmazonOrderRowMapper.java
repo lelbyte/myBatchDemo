@@ -1,28 +1,28 @@
 package com.example.myBatchDemo.Mappers;
 
-import com.example.myBatchDemo.DTOs.AmazonOrder;
+import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AmazonOrderRowMapper implements RowMapper<AmazonOrder> {
+public class AmazonOrderRowMapper implements RowMapper<AmazonOrderDTO> {
 
     @Nullable
     @Override
-    public AmazonOrder mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public AmazonOrderDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-        AmazonOrder amazonOrder = new AmazonOrder();
-        amazonOrder.setOrderId(rs.getLong("order_id"));
-        amazonOrder.setCustomerId(rs.getString("customer_id"));
-        amazonOrder.setProduct(rs.getString("product"));
-        amazonOrder.setCategory(rs.getString("category"));
-        amazonOrder.setQuantity(rs.getInt("quantity"));
-        amazonOrder.setPrice(rs.getBigDecimal("price"));
-        amazonOrder.setOrderDate(rs.getDate("order_date").toLocalDate());
-        amazonOrder.setStatus(rs.getString("status"));
+        AmazonOrderDTO amazonOrderDTO = new AmazonOrderDTO();
+        amazonOrderDTO.setOrderId(rs.getLong("order_id"));
+        amazonOrderDTO.setCustomerId(rs.getString("customer_id"));
+        amazonOrderDTO.setProduct(rs.getString("product"));
+        amazonOrderDTO.setCategory(rs.getString("category"));
+        amazonOrderDTO.setQuantity(rs.getInt("quantity"));
+        amazonOrderDTO.setPrice(rs.getBigDecimal("price"));
+        amazonOrderDTO.setOrderDate(rs.getDate("order_date").toLocalDate());
+        amazonOrderDTO.setStatus(rs.getString("status"));
 
-        return amazonOrder;
+        return amazonOrderDTO;
     }
 }

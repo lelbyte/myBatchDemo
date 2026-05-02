@@ -1,15 +1,15 @@
 package com.example.myBatchDemo.Mappers;
 
-import com.example.myBatchDemo.DTOs.AmazonOrder;
+import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
 import org.springframework.batch.item.file.LineMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class AmazonOrderTextMapper implements LineMapper<AmazonOrder> {
+public class AmazonOrderTextMapper implements LineMapper<AmazonOrderDTO> {
 
     @Override
-    public AmazonOrder mapLine(String line, int lineNumber) throws Exception {
+    public AmazonOrderDTO mapLine(String line, int lineNumber) throws Exception {
 
         if (line.trim().isEmpty() || line.trim().startsWith("#")) {
             return null; // filtered
@@ -17,16 +17,16 @@ public class AmazonOrderTextMapper implements LineMapper<AmazonOrder> {
         // Split CSV line
         String[] tokens = line.split(",");
 
-        AmazonOrder amazonOrder = new AmazonOrder();
-        amazonOrder.setOrderId(Long.parseLong(tokens[0].trim()));
-        amazonOrder.setCustomerId(tokens[1].trim());
-        amazonOrder.setProduct(tokens[2].trim());
-        amazonOrder.setCategory(tokens[3].trim());
-        amazonOrder.setQuantity(Integer.parseInt(tokens[4].trim()));
-        amazonOrder.setPrice(new BigDecimal(tokens[5].trim()));
-        amazonOrder.setOrderDate(LocalDate.parse(tokens[6].trim())); // yyyy-MM-dd
-        amazonOrder.setStatus(tokens[7].trim());
+        AmazonOrderDTO amazonOrderDTO = new AmazonOrderDTO();
+        amazonOrderDTO.setOrderId(Long.parseLong(tokens[0].trim()));
+        amazonOrderDTO.setCustomerId(tokens[1].trim());
+        amazonOrderDTO.setProduct(tokens[2].trim());
+        amazonOrderDTO.setCategory(tokens[3].trim());
+        amazonOrderDTO.setQuantity(Integer.parseInt(tokens[4].trim()));
+        amazonOrderDTO.setPrice(new BigDecimal(tokens[5].trim()));
+        amazonOrderDTO.setOrderDate(LocalDate.parse(tokens[6].trim())); // yyyy-MM-dd
+        amazonOrderDTO.setStatus(tokens[7].trim());
 
-        return amazonOrder;
+        return amazonOrderDTO;
     }
 }

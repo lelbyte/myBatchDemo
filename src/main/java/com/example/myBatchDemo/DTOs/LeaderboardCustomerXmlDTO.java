@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Setter
 @XmlRootElement(name = "customer")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class LeaderboardCustomerXml {
+public class LeaderboardCustomerXmlDTO {
 
     @XmlElement(name = "customer_id")
     private String customerId;
@@ -22,10 +22,10 @@ public class LeaderboardCustomerXml {
     private BigDecimal totalAmount;
 
     // JAXB needs a no-arg constructor
-    public LeaderboardCustomerXml() {
+    public LeaderboardCustomerXmlDTO() {
     }
 
-    public LeaderboardCustomerXml(String customerId, BigDecimal totalAmount) {
+    public LeaderboardCustomerXmlDTO(String customerId, BigDecimal totalAmount) {
         this.customerId = customerId;
         this.totalAmount = totalAmount;
     }
