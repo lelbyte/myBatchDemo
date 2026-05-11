@@ -1,7 +1,6 @@
 package com.example.myBatchDemo.Writers;
 
 import com.example.myBatchDemo.DTOs.LeaderboardEntryDTO;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemStreamWriter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,8 +12,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-@StepScope
-@Component("customerLeaderboardStageWriter")
+@Component
 public class CustomerLeaderboardStageWriter implements ItemStreamWriter<LeaderboardEntryDTO> {
 
     private final JdbcTemplate jdbcTemplate;

@@ -2,7 +2,6 @@ package com.example.myBatchDemo.Writers;
 
 import com.example.myBatchDemo.Services.RevenueTotalsAccumulatorService;
 import com.example.myBatchDemo.DTOs.RevenueContributionDTO;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.WritableResource;
@@ -14,21 +13,13 @@ import java.io.File;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
-@StepScope
-@Component("revenueCSVWriter")
+@Component
 public class RevenueCSVWriter implements ItemStreamWriter<RevenueContributionDTO> {
 
     private final WritableResource reportRevenueOutputResource;
     private final RevenueTotalsAccumulatorService accumulator;
     private BufferedWriter writer;
 
-    /**
-     * todo da output durch runtime entsteht, ist output ordner nicht im resource ordner enthalten
-     * -> Resource ordner dient naemlich nur für read-only
-     *
-     * @param reportRevenueOutputResource
-     * @param accumulator
-     */
     public RevenueCSVWriter(@Value("file:output/revenues.csv")
                             WritableResource reportRevenueOutputResource,
                             RevenueTotalsAccumulatorService accumulator) {
@@ -47,10 +38,6 @@ public class RevenueCSVWriter implements ItemStreamWriter<RevenueContributionDTO
     public void open(ExecutionContext executionContext) throws ItemStreamException {
 
         try {
-            File file = reportRevenueOutputResource.getFile();
-            File parent = file.getParentFile();
-            if (parent != null) parent.mkdirs();
-
             writer = new BufferedWriter(new OutputStreamWriter(
                     reportRevenueOutputResource.getOutputStream(), StandardCharsets.UTF_8));
 
@@ -76,8 +63,6 @@ public class RevenueCSVWriter implements ItemStreamWriter<RevenueContributionDTO
             throw new IllegalStateException("Failed to close revenue CSV", e);
         }
 
-        // todo später entfernen
-        System.out.println("Erfolgreich abgeschlossen :-)");
     }
 
 }

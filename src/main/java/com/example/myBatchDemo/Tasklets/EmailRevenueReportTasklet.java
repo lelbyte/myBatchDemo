@@ -7,13 +7,13 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.Nullable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
 @StepScope
-@Component("emailRevenueReportTasklet")
+@Component
 public class EmailRevenueReportTasklet implements Tasklet {
 
     private final String reportPath;
@@ -34,9 +34,8 @@ public class EmailRevenueReportTasklet implements Tasklet {
         this.emailService = emailService;
     }
 
-    @Nullable
     @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
+    public RepeatStatus execute(@NonNull StepContribution contribution, @NonNull ChunkContext chunkContext) {
 
         System.out.println(" -------------- Hier müsste nun die Email stehen: --------------");
         emailService.sendRevenueReport(reportPath, totalRevenue, rowsWritten);

@@ -1,15 +1,13 @@
 package com.example.myBatchDemo.Writers;
 
 import com.example.myBatchDemo.DTOs.LeaderboardCustomerXmlDTO;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.xml.StaxEventItemWriter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.WritableResource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Component;
 
-@Component("leaderBoardXmlWriter")
-@StepScope
+@Component
 public class LeaderboardXmlWriter extends StaxEventItemWriter<LeaderboardCustomerXmlDTO> {
 
     public LeaderboardXmlWriter(

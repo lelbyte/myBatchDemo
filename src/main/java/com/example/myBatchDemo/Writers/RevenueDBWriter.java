@@ -2,7 +2,6 @@ package com.example.myBatchDemo.Writers;
 
 import com.example.myBatchDemo.Services.RevenueTotalsAccumulatorService;
 import com.example.myBatchDemo.DTOs.RevenueContributionDTO;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemStreamWriter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,8 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 
-@Component("revenueDBWriter")
-@StepScope
+@Component
 public class RevenueDBWriter implements ItemStreamWriter<RevenueContributionDTO> {
 
     private final RevenueTotalsAccumulatorService accumulator;

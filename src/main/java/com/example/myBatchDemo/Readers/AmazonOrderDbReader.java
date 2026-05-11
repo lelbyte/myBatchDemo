@@ -2,7 +2,6 @@ package com.example.myBatchDemo.Readers;
 
 import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
 import com.example.myBatchDemo.Mappers.AmazonOrderRowMapper;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.support.H2PagingQueryProvider;
@@ -11,8 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.util.Map;
 
-@Component("amazonOrderReader")
-@StepScope
+@Component
 public class AmazonOrderDbReader extends JdbcPagingItemReader<AmazonOrderDTO> {
 
     public AmazonOrderDbReader(DataSource sourceDataSource) {

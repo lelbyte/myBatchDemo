@@ -16,7 +16,7 @@ import org.springframework.core.task.TaskExecutor;
 @Configuration
 public class EnrichmentAsyncConfig {
 
-    @Bean(name = "asyncEnrichOrderProcessor")
+    @Bean
     public AsyncItemProcessor<AmazonOrderDTO, AmazonOrderEnrichedDTO> asyncEnrichOrderProcessor(
             EnrichOrderProcessor enrichOrderProcessor,
             TaskExecutor threadPoolTaskExecutorMultiThread) {
@@ -27,7 +27,7 @@ public class EnrichmentAsyncConfig {
         return p;
     }
 
-    @Bean(name = "asyncAmazonOrderEnrichmentWriter")
+    @Bean
     public AsyncItemWriter<AmazonOrderEnrichedDTO> asyncAmazonOrderEnrichmentWriter(
             AmazonOrderEnrichmentWriter amazonOrderEnrichmentWriter) {
 

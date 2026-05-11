@@ -6,7 +6,6 @@ import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ExecutionContext;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -26,7 +25,6 @@ public class EnrichOrdersStepListener implements StepExecutionListener {
     public void beforeStep(StepExecution stepExecution) {
 
         this.startTime = Instant.now();
-        String thread = Thread.currentThread().getName();
 
         // optional: log initial state (useful on restart)
         ExecutionContext stepCtx = stepExecution.getExecutionContext();
@@ -38,7 +36,6 @@ public class EnrichOrdersStepListener implements StepExecutionListener {
                 stepExecution.getStepName(), alreadyWritten);
     }
 
-    @Nullable
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
 

@@ -2,14 +2,18 @@ package com.example.myBatchDemo;
 
 import com.example.myBatchDemo.DTOs.*;
 import com.example.myBatchDemo.Listeners.*;
-import com.example.myBatchDemo.Processors.*;
+import com.example.myBatchDemo.Processors.CustomerContributionProcessor;
+import com.example.myBatchDemo.Processors.LeaderboardXmlProcessor;
+import com.example.myBatchDemo.Processors.ReportRevenueProcessor;
+import com.example.myBatchDemo.Processors.ValidateAmazonOrderProcessor;
 import com.example.myBatchDemo.Readers.AmazonOrderCsvReader;
 import com.example.myBatchDemo.Readers.AmazonOrderDbReader;
 import com.example.myBatchDemo.Readers.CustomerLeaderboardStageReader;
 import com.example.myBatchDemo.Readers.PartitionedAmazonOrderDbReader;
-import com.example.myBatchDemo.Writers.*;
 import com.example.myBatchDemo.Tasklets.PrepareLeaderboardTasklet;
-import org.springframework.batch.core.*;
+import com.example.myBatchDemo.Writers.*;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.flow.Flow;
@@ -22,7 +26,6 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.integration.async.AsyncItemProcessor;
 import org.springframework.batch.integration.async.AsyncItemWriter;
 import org.springframework.batch.item.support.CompositeItemWriter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -33,14 +36,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.util.List;
 import java.util.concurrent.Future;
 
-// todo wenn alles fertig, Code auf resistent pruefen zb durch jobparameter abbruch eines steps oder jobs erzwingen!
 @Configuration
 public class AmazonOrdersJobConfiguration {
 
-    @Bean(name = "revenueSummaryJob")
+    @Bean
     public Job revenueSummaryJob(JobRepository jobRepository,
-                                 @Qualifier("validateAndLoadOrdersStep") Step validateAndLoadOrdersStep,
-                                 @Qualifier("splitRevenueCustomerStep") Step splitRevenueCustomerStep,
+                                 Step validateAndLoadOrdersStep,
+                                 Step splitRevenueCustomerStep,
                                  Step enrichOrdersStep) {
 
         return new JobBuilder("revenueSummaryJob", jobRepository)
@@ -52,26 +54,25 @@ public class AmazonOrdersJobConfiguration {
 
     }
 
-    @Bean(name = "customerLeaderboardFlow")
-    public Flow customerLeaderboardFlow(JobRepository jobRepository,
-                                        @Qualifier("prepareLeaderboardStep") Step prepareLeaderboardStep,
-                                        @Qualifier("leaderboardMasterStep") Step leaderboardMasterStep,
-                                        @Qualifier("exportLeaderboardXmlStep") Step exportLeaderboardXmlStep) {
+    @Bean
+    public Flow customerLeaderboardFlow(Step prepareLeaderboardStep,
+                                        Step leaderboardMasterStep,
+                                        Step exportLeaderboardXmlStep) {
 
         return new FlowBuilder<Flow>("customerLeaderboardFlow")
-                .start(prepareLeaderboardStep)  // schreubt die Eintraege in Tabelle customer_leaderboard_stage
+                .start(prepareLeaderboardStep)  // schreibt die Eintraege in Tabelle customer_leaderboard_stage
                 .next(leaderboardMasterStep)      // partitioned chunk
                 .next(exportLeaderboardXmlStep)   // schreibt das Ergebnis aus customer_leaderboard_stage inxml
                 .build();
     }
 
-    @Bean(name = "splitRevenueCustomerStep")
+    @Bean
     public Step splitRevenueCustomerStep(JobRepository jobRepository,
-                                         @Qualifier("reportRevenueStep") Step reportRevenueStep,
-                                         @Qualifier("noRevenueStep") Step noRevenueStep,
-                                         @Qualifier("emailStep") Step emailStep,
-                                         @Qualifier("customerLeaderboardFlow") Flow customerLeaderboardFlow,
-                                         TaskExecutor threadPoolTaskExecutorSplit) {
+                                         TaskExecutor threadPoolTaskExecutorSplit,
+                                         Step reportRevenueStep,
+                                         Step noRevenueStep,
+                                         Step emailStep,
+                                         Flow customerLeaderboardFlow) {
 
         Flow revenueFlow = new FlowBuilder<Flow>("revenueFlow")
                 .start(reportRevenueStep)
@@ -95,12 +96,12 @@ public class AmazonOrdersJobConfiguration {
      * FoundationJob: Schreibt alle Eintraege in my-amazon-orders.csv in die H2-DB
      * CSV -> DBn
      */
-    @Bean(name = "validateAndLoadOrdersStep")
+    @Bean
     public Step validateAndLoadOrdersStep(JobRepository jobRepository,
                                           PlatformTransactionManager transactionManager,
-                                          AmazonOrderDBWriter amazonOrderDBWriter,
                                           AmazonOrderCsvReader amazonOrderCsvReader,
-                                          ValidateAmazonOrderProcessor validateAmazonOrderProcessor) {
+                                          ValidateAmazonOrderProcessor validateAmazonOrderProcessor,
+                                          AmazonOrderDBWriter amazonOrderDBWriter) {
 
         return new StepBuilder("validate-and-load-orders", jobRepository)
                 .<AmazonOrderDTO, AmazonOrderDTO>chunk(1, transactionManager)
@@ -111,7 +112,7 @@ public class AmazonOrdersJobConfiguration {
                 .build();
     }
 
-    @Bean(name = "reportRevenueStep")
+    @Bean
     public Step reportRevenueStep(JobRepository jobRepository,
                                   PlatformTransactionManager transactionManager,
                                   AmazonOrderDbReader amazonOrderDbReader,
@@ -134,7 +135,7 @@ public class AmazonOrdersJobConfiguration {
                 .build();
     }
 
-    @Bean(name = "emailStep")
+    @Bean
     public Step emailStep(JobRepository jobRepository,
                           PlatformTransactionManager transactionManager,
                           Tasklet emailRevenueReportTasklet,
@@ -149,7 +150,6 @@ public class AmazonOrdersJobConfiguration {
     }
 
     @Bean
-    @Qualifier("noRevenueStep")
     public Step noRevenueStep(JobRepository jobRepository,
                               PlatformTransactionManager transactionManager,
                               Tasklet noRevenueTasklet,
@@ -173,7 +173,7 @@ public class AmazonOrdersJobConfiguration {
         Thread 3 → items 7–9
         Thread 4 → items 10–12
      */
-    @Bean(name = "threadPoolTaskExecutorSplit")
+    @Bean
     public TaskExecutor threadPoolTaskExecutorSplit() {
         ThreadPoolTaskExecutor threadPoolExecutor = new ThreadPoolTaskExecutor();
         threadPoolExecutor.setCorePoolSize(2);
@@ -184,7 +184,7 @@ public class AmazonOrdersJobConfiguration {
         return threadPoolExecutor;
     }
 
-    @Bean(name = "threadPoolTaskExecutorPartition")
+    @Bean
     public TaskExecutor threadPoolTaskExecutorPartition() {
         ThreadPoolTaskExecutor threadPoolExecutor = new ThreadPoolTaskExecutor();
         threadPoolExecutor.setCorePoolSize(2);
@@ -195,7 +195,7 @@ public class AmazonOrdersJobConfiguration {
         return threadPoolExecutor;
     }
 
-    @Bean(name = "threadPoolTaskExecutorMultiThread")
+    @Bean
     public TaskExecutor threadPoolTaskExecutorMultiThread() {
         ThreadPoolTaskExecutor threadPoolExecutor = new ThreadPoolTaskExecutor();
         // Hier: Es werden genau nur zwei Threads zur verfuegung gestellt
@@ -207,7 +207,7 @@ public class AmazonOrdersJobConfiguration {
         return threadPoolExecutor;
     }
 
-    @Bean(name = "prepareLeaderboardStep")
+    @Bean
     public Step prepareLeaderboardStep(JobRepository jobRepository,
                                        PlatformTransactionManager tx,
                                        PrepareLeaderboardTasklet prepareLeaderboardTasklet) {
@@ -216,12 +216,12 @@ public class AmazonOrdersJobConfiguration {
                 .build();
     }
 
-    @Bean(name = "leaderboardSlaveStep")
-    public Step leaderboardSlaveStep(JobRepository jobRepository,
-                                     PlatformTransactionManager tx,
+    @Bean
+    public Step leaderboardSlaveStep(JobRepository jobRepository, PlatformTransactionManager tx,
                                      PartitionedAmazonOrderDbReader partitionedAmazonOrderDbReader,
                                      CustomerContributionProcessor customerContributionProcessor,
-                                     CustomerLeaderboardStageWriter customerLeaderboardStageWriter, LeaderboardSlaveStepListener leaderboardSlaveStepListener) {
+                                     CustomerLeaderboardStageWriter customerLeaderboardStageWriter,
+                                     LeaderboardSlaveStepListener leaderboardSlaveStepListener) {
 
         return new StepBuilder("leaderboardSlaveStep", jobRepository)
                 .<AmazonOrderDTO, LeaderboardEntryDTO>chunk(5, tx)
@@ -235,7 +235,7 @@ public class AmazonOrdersJobConfiguration {
                 .build();
     }
 
-    @Bean(name = "leaderboardPartitionHandler")
+    @Bean
     public TaskExecutorPartitionHandler leaderboardPartitionHandler(Step leaderboardSlaveStep,
                                                                     TaskExecutor threadPoolTaskExecutorPartition) {
 
@@ -246,7 +246,7 @@ public class AmazonOrdersJobConfiguration {
         return handler;
     }
 
-    @Bean(name = "leaderboardMasterStep")
+    @Bean
     public Step leaderboardMasterStep(JobRepository jobRepository,
                                       Partitioner orderIdRangePartitioner,
                                       TaskExecutorPartitionHandler leaderboardPartitionHandler) {
@@ -257,7 +257,7 @@ public class AmazonOrdersJobConfiguration {
                 .build();
     }
 
-    @Bean(name = "exportLeaderboardXmlStep")
+    @Bean
     public Step exportLeaderboardXmlStep(JobRepository jobRepository,
                                          PlatformTransactionManager tx,
                                          CustomerLeaderboardStageReader customerLeaderboardStageReader,
@@ -272,7 +272,7 @@ public class AmazonOrdersJobConfiguration {
                 .build();
     }
 
-    @Bean(name = "enrichOrdersStep")
+    @Bean
     public Step enrichOrdersStep(JobRepository jobRepository,
                                  PlatformTransactionManager transactionManager,
                                  EnrichOrdersStepListener enrichOrdersStepListener,

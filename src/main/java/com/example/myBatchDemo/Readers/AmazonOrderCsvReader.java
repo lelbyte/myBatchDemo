@@ -2,14 +2,12 @@ package com.example.myBatchDemo.Readers;
 
 import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
 import com.example.myBatchDemo.Mappers.AmazonOrderTextMapper;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-@Component("amazonOrderCsvReader")
-@StepScope
+@Component
 public class AmazonOrderCsvReader extends FlatFileItemReader<AmazonOrderDTO> {
 
     public AmazonOrderCsvReader(

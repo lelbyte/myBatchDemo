@@ -1,9 +1,9 @@
 package com.example.myBatchDemo.Processors;
 
 import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.math.RoundingMode;
@@ -11,8 +11,6 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Component
-@StepScope
-@Qualifier("validateAmazonOrderProcessor")
 public class ValidateAmazonOrderProcessor implements ItemProcessor<AmazonOrderDTO, AmazonOrderDTO> {
 
     private static final Set<String> ALLOWED_STATUSES = Set.of(
@@ -21,14 +19,9 @@ public class ValidateAmazonOrderProcessor implements ItemProcessor<AmazonOrderDT
             "INCOMPLETE"
     );
 
+    @Nullable
     @Override
-    public AmazonOrderDTO process(AmazonOrderDTO item) {
-
-        if (item == null) {
-            return null;
-        }
-
-        // normalize
+    public AmazonOrderDTO process(@NonNull AmazonOrderDTO item) {
         normalizeAndTrim(item);
         return validate(item);
     }

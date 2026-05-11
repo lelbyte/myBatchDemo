@@ -1,7 +1,6 @@
 package com.example.myBatchDemo.Writers;
 
 import com.example.myBatchDemo.DTOs.AmazonOrderEnrichedDTO;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamException;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.util.Objects;
 
-@StepScope
 @Component
 public class AmazonOrderEnrichmentWriter implements ItemStreamWriter<AmazonOrderEnrichedDTO> {
 

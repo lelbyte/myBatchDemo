@@ -1,7 +1,9 @@
 package com.example.myBatchDemo.Mappers;
 
 import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
+import org.springframework.batch.item.file.FlatFileParseException;
 import org.springframework.batch.item.file.LineMapper;
+import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,10 +11,13 @@ import java.time.LocalDate;
 public class AmazonOrderTextMapper implements LineMapper<AmazonOrderDTO> {
 
     @Override
-    public AmazonOrderDTO mapLine(String line, int lineNumber) throws Exception {
+    @NonNull
+    public AmazonOrderDTO mapLine(@NonNull String line, int lineNumber) {
 
-        if (line.trim().isEmpty() || line.trim().startsWith("#")) {
-            return null; // filtered
+        if (line.trim().isEmpty()) {
+            throw new FlatFileParseException("Empty line detected", line, lineNumber
+            );
+
         }
         // Split CSV line
         String[] tokens = line.split(",");

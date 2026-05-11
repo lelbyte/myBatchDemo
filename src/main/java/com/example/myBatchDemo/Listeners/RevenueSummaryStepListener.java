@@ -7,19 +7,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
 @Component
-@StepScope
 public class RevenueSummaryStepListener implements StepExecutionListener {
 
     public static final String CTX_TOTAL_REVENUE = "totalRevenue";
     public static final String CTX_ROWS_WRITTEN  = "rowsWritten";
-    public static final String CTX_OUTPUT_PATH   = "revenueReportPath";
     private static final Logger LOGGER = LoggerFactory.getLogger(RevenueSummaryStepListener.class);
 
     private final RevenueTotalsAccumulatorService accumulator;

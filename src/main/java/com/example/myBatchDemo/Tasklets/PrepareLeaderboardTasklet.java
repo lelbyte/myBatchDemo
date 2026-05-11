@@ -5,6 +5,7 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +18,8 @@ public class PrepareLeaderboardTasklet implements Tasklet {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Nullable
     @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext){
+    public RepeatStatus execute(@NonNull StepContribution contribution, @NonNull ChunkContext chunkContext){
         jdbcTemplate.update("""
                     CREATE TABLE IF NOT EXISTS customer_leaderboard_stage (
                         customer_id BIGINT PRIMARY KEY,

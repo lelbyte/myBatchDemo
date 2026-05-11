@@ -2,14 +2,12 @@ package com.example.myBatchDemo.Mappers;
 
 import com.example.myBatchDemo.DTOs.AmazonOrderDTO;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.lang.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AmazonOrderRowMapper implements RowMapper<AmazonOrderDTO> {
 
-    @Nullable
     @Override
     public AmazonOrderDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
 

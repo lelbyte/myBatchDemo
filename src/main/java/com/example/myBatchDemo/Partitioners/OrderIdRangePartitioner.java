@@ -49,7 +49,7 @@ public class OrderIdRangePartitioner implements Partitioner {
         long targetSize = Math.max(1, (max - min + 1) / gridSize);
         long start = min;
 
-        // 3. Parittion bauen! Fuer jeden Eintrag soll
+        // 3. Parition bauen! Fuer jeden Eintrag soll
         for (int i = 0; i < gridSize; i++) {
 
             long end = (i == gridSize - 1)
