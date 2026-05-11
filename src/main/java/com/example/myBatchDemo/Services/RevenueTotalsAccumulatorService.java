@@ -1,18 +1,20 @@
 package com.example.myBatchDemo.Services;
 
 import lombok.Getter;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Service
+@StepScope
 public class RevenueTotalsAccumulatorService {
 
-    private final Map<LocalDate, BigDecimal> totals = new TreeMap<>();
+    private final Map<LocalDate, BigDecimal> totals = new ConcurrentHashMap<>();
 
     public void add(LocalDate date, BigDecimal amount) {
         totals.merge(date, amount, BigDecimal::add);
