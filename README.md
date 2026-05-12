@@ -100,7 +100,7 @@ Die generierten Dateien werden im folgenden Verzeichnis gespeichert: `/output`
 ## Anwendung starten
 
 ### Empfehlung: Anwendung mit Docker starten
-Ein Dockerfile ist bereits im Projekt beigefügt. Folgender Befehl startet die Anwendung: 
+Ein Dockerfile ist bereits im Projekt beigefügt. Folgender Befehle starten die Anwendung: 
 
 Image bauen:
 ```bash 
