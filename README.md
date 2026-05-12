@@ -102,8 +102,12 @@ Die generierten Dateien werden im folgenden Verzeichnis gespeichert: `/output`
 ### Empfehlung: Anwendung mit Docker starten
 Ein Dockerfile ist bereits im Projekt beigefügt. Folgender Befehl startet die Anwendung: 
 
+Image bauen:
 ```bash 
 docker build -t my-batch-demo .
+```
+Container starten:
+```bash 
 docker run --rm \
   -p 8080:8080 \
   -v "$(pwd)/output:/app/output" \
