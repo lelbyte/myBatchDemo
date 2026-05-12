@@ -100,7 +100,7 @@ Die generierten Dateien werden im folgenden Verzeichnis gespeichert: `/output`
 ## Anwendung starten
 
 ### Empfehlung: Anwendung mit Docker starten
-Ein Dockerfile ist bereits im Projekt beigefügt. Folgender Befehle starten die Anwendung: 
+Ein Dockerfile ist bereits im Projekt beigefügt. Folgende Befehle starten die Anwendung: 
 
 Image bauen:
 ```bash 
@@ -123,12 +123,15 @@ Für die lokale Ausführung werden folgende Komponenten benötigt:
 Danach einfach die Klasse `MyBatchDemoApplication.java` starten.
 
 #### Bereinigung nach jedem Batch-Durchlauf
-Batch und Flyway arbeiten mit temporären Daten und Zwischenergebnissen.
 
-Nach jedem Durchlauf sollten deshalb die Datenordner gelöscht werden, da die veralteteten Daten inkonsistentes Verhalten 
-verursachen könnten. 
+Spring Batch und Flyway arbeiten mit temporären Daten, Metadaten und Zwischenergebnissen.
+Da die Anwendung zusätzlich Daten in eine eingebettete H2-Datenbank schreibt, 
+sollten die Datenordner nach jedem Durchlauf bereinigt werden. 
+Andernfalls können veraltete Daten oder Batch-Metadaten zu inkonsistentem Verhalten führen.
 
-Mit folgendem Befehl werden alte Daten entfernt und der `data`-Ordner neu erstellt:
+Beim Löschen des `data`-Ordners wird gleichzeitig auch die eingebettete H2-Datenbankdatei (`testdb.mv.db`) entfernt.
+
+Mit folgendem Befehl werden alte Daten gelöscht und der `data`-Ordner neu erstellt:
 
 ```bash 
 rm -rf data && mkdir data
