@@ -89,7 +89,7 @@ Die Eingabedateien befinden sich unter: `src/main/resources/input`
 
 #### Hinweis zu den APIs Ordner und JSON-Dateien
 
-Die JSON-Dateien in /input dienen als simulierte externe API („Fake API“) für Demo- und Entwicklungszwecke.
+Die JSON-Dateien in `/input dienen als simulierte externe API („Fake API“) für Demo- und Entwicklungszwecke.
 Sie werden von [`ProductCatalogLookup.java`](src/main/java/com/example/myBatchDemo/APIs/ProductCatalogLookup.java)
 aufgerufen.
 
