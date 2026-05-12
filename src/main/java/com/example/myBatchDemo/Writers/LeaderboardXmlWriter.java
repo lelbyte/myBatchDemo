@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 public class LeaderboardXmlWriter extends StaxEventItemWriter<LeaderboardCustomerXmlDTO> {
 
     public LeaderboardXmlWriter(
-            // Write to a temp file first (recommended). Rename in a final tasklet step.
-            @Value("file:output/customer-leaderboard.tmp.xml")
+            @Value("file:output/customer-leaderboard.xml")
             WritableResource outputResource
     ) {
         setName("leaderBoardXmlWriter");
