@@ -125,10 +125,10 @@ Danach einfach die Klasse `MyBatchDemoApplication.java` starten.
 #### Bereinigung nach jedem Batch-Durchlauf
 
 Spring Batch und Flyway arbeiten mit temporären Daten, Metadaten und Zwischenergebnissen.
+
 Da die Anwendung zusätzlich Daten in eine eingebettete H2-Datenbank schreibt, 
 sollten die Datenordner nach jedem Durchlauf bereinigt werden. 
 Andernfalls können veraltete Daten oder Batch-Metadaten zu inkonsistentem Verhalten führen.
-
 Beim Löschen des `data`-Ordners wird gleichzeitig auch die eingebettete H2-Datenbankdatei (`testdb.mv.db`) entfernt.
 
 Mit folgendem Befehl werden alte Daten gelöscht und der `data`-Ordner neu erstellt:
