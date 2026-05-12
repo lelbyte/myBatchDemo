@@ -6,12 +6,6 @@ Die Umsetzung sowie die technischen Details erläutere ich gerne näher im Vorst
 
 Dieses Projekt ist eine Spring-Batch-Anwendung zur Verarbeitung von Bestelldaten.
 
-Dieses Projekt ist eine Spring-Batch-Anwendung zur Verarbeitung von Bestelldaten.
-
-Die Anwendung liest verschiedene Dateiformate wie .json und .csv ein, verarbeitet die Daten und generiert daraus 
-.xml- sowie .csv-Dateien. Zusätzlich wird eine H2-Datenbank genutzt, um Daten zu speichern, auszulesen und 
-Datenbankoperationen wie Schemaänderungen mithilfe von Tasklets durchzuführen.
-
 Die Anwendung demonstriert folgende Konzepte im Bereich Batch-Processing:
 - Dateibasierte Datenverarbeitung
 - Chunk-orientierte Verarbeitung
@@ -37,9 +31,9 @@ Die Anwendung demonstriert folgende Konzepte im Bereich Batch-Processing:
 src/main/java/com/example/myBatchDemo
 │
 ├── APIs              # Fake REST-Endpunkte
-├── Configs           # Spring-Batch-Konfigurationen (aktuell nur Wrapper für Multi-Threading Verarbeitung)
+├── Configs           # Spring-Batch-Konfigurationen
 ├── DTOs              # Data Transfer Objects
-├── Listeners         # Job- und Step-Listener (eher fürs Logging von Meta-Daten verwendet)
+├── Listeners         # Step-Listener für Meta-Daten, Logging, Monitoring
 ├── Mappers           # Mapping-Logik
 ├── Partitioners      # Parallelisierung / Partitionierung
 ├── Processors        # Datenverarbeitung
@@ -62,26 +56,46 @@ src/main/resources
 ```
 ### Batch-Verarbeitungsablauf
 
-Herzstück der Anwendung ist der Batch-Job AmazonOrdersJobConfiguration.java.
+Herzstück der Anwendung ist der Batch-Job 
+[`AmazonOrdersJobConfiguration`](src/main/java/com/example/myBatchDemo/AmazonOrdersJobConfiguration.java).
 
+#### BPMN Model
 
-Der Batch-Job verarbeitet Amazon-Bestelldateien in folgenden Schritten:
-*(BPMN-Diagramm kommt noch)*
+Im docs-Ordner befindet sich ein mit Camunda Modeler (Version 7) erstelltes BPMN-Diagramm, das den Ablauf 
+des Batch-Jobs visualisiert. Der Fokus liegt dabei auf der Prozesslogik sowie den jeweiligen Input- und Output-Quellen 
+der einzelnen Steps.
 
+Das Diagramm enthält:
+- den Job und dessen Steps
+- Reader
+- Processor
+- Writer
+- Tasklets
+
+- Listener wurden bewusst nicht modelliert, da sie primär für Logging, Monitoring und die Ausgabe von Metadaten verwendet werden.
+
+![RevenueSummaryJob](docs/revenueSummaryJob.png)
+
+- Die dazugehörige bpmn-Datei befindet sich auch im selben Ordner:
+[`revenueSummaryJob.bpmn`](docs/revenueSummaryJob.bpmn)
 
 ### Configuration
 
-Die Anwendungskonfiguration befindet sich unter: src/main/resources/application.yaml
+Die Anwendungskonfiguration befindet hier: [`application.yaml`](src/main/resources/application.yaml)
 
 ### Eingabedateien
 
-Die Eingabedateien befinden sich unter:
-src/main/resources/input
+Die Eingabedateien befinden sich unter: `src/main/resources/input`
+
+#### Hinweis zu den APIs Ordner und JSON-Dateien
+
+Die JSON-Dateien in /input dienen als simulierte externe API („Fake API“) für Demo- und Entwicklungszwecke.
+Sie werden von [`ProductCatalogLookup.java`](src/main/java/com/example/myBatchDemo/APIs/ProductCatalogLookup.java)
+aufgerufen.
 
 ### Ausgabedateien
 
-Die generierten Dateien werden im folgenden Verzeichnis gespeichert:
-/output
+Die generierten Dateien werden im folgenden Verzeichnis gespeichert: `/output`
 
 ## Anwendung starten
 
@@ -89,37 +103,42 @@ Die generierten Dateien werden im folgenden Verzeichnis gespeichert:
 Ein Dockerfile ist bereits im Projekt beigefügt. Folgender Befehl startet die Anwendung: 
 
 ```bash 
-docker build --no-cache -t my-batch-demo .
+docker build -t my-batch-demo .
 docker run --rm \
   -p 8080:8080 \
-  -v "$(pwd)/data:/app/data" \
   -v "$(pwd)/output:/app/output" \
-  -e SPRING_PROFILES_ACTIVE=docker \
   my-batch-demo
 ```
 
-Verwendet wird eine embedded H2-Datenbank. Sie kann lokal durch folgenden Link aufgerufen werden:
-http://localhost:8080/h2-console 
+### Alternativ: Anwendung mit MyBatchDemoApplication.java starten
 
-Im Browser bitte folgende Daten eingeben:
-- JDBC URL: jdbc:h2:file:./data/testdb
-- username: dataprocessing
-- password: password
+Für die lokale Ausführung werden folgende Komponenten benötigt:
+- Java 21 (JDK 21)
+- Maven 3.9+ oder alternativ der enthaltene Maven Wrapper `./mvnw`
 
-### Anwendung mit MyBatchDemoApplication.java starten
+Danach einfach die Klasse `MyBatchDemoApplication.java` starten.
 
-Einfach die Klasse MyBatchDemoApplication.java starten.
-Bitte Projekt vorher auf Java SDK 21 setzen.
-
-### Bereinigung nach jedem Batch-Durchlauf
+#### Bereinigung nach jedem Batch-Durchlauf
 Batch und Flyway arbeiten mit temporären Daten und Zwischenergebnissen.
 
 Nach jedem Durchlauf sollten deshalb die Datenordner gelöscht werden, da die veralteteten Daten inkonsistentes Verhalten 
 verursachen könnten. 
 
-Mit diesem Befehl werden die alten Daten gelöscht und das Projekt wird neugebaut:
+Mit folgendem Befehl werden alte Daten entfernt und der `data`-Ordner neu erstellt:
 
 ```bash 
-./mvnw clean package
 rm -rf data && mkdir data
 ```
+
+Wird die Anwendung hingegen über Docker gestartet, muss der `data`-Ordner nicht manuell bereinigt werden, 
+da die Daten innerhalb des Containers verwaltet und beim Entfernen des Containers automatisch gelöscht werden.
+
+## Zugriff auf die Einträge der H2-Datenbank
+
+Verwendet wird eine embedded H2-Datenbank. Sie kann lokal durch folgenden Link aufgerufen werden:
+http://localhost:8080/h2-console
+
+Im Browser bitte folgende Daten eingeben:
+- JDBC URL: `jdbc:h2:file:./data/testdb`
+- username: `dataprocessing`
+- password: `password`
