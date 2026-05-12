@@ -9,7 +9,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
@@ -29,7 +28,9 @@ public class RevenueCSVWriter implements ItemStreamWriter<RevenueContributionDTO
 
     @Override
     public void write(@NonNull Chunk<? extends RevenueContributionDTO> chunk) {
-        for (RevenueContributionDTO c : chunk) { // todo eig muss diese logic in den processor oder so
+        // Kleine Berechnungen oder Aggregierungen im Writer sind in Ordnung.
+        // Groessere Berechnungen waeren im Processor ausgelagert gewesen
+        for (RevenueContributionDTO c : chunk) {
             accumulator.add(c.date(), c.amount());
         }
     }
