@@ -71,7 +71,8 @@ Das Diagramm enthält:
 - Processor
 - Writer
 - Tasklets
-- Listener wurden bewusst nicht modelliert, da sie primär für Logging, Monitoring und die Ausgabe von Metadaten verwendet werden.
+
+Listener wurden bewusst nicht modelliert, da sie primär für Logging, Monitoring und die Ausgabe von Metadaten verwendet werden.
 
 ![RevenueSummaryJob](docs/revenueSummaryJob.png)
 
