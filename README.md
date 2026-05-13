@@ -122,10 +122,9 @@ Für die lokale Ausführung werden folgende Komponenten benötigt:
 
 Danach einfach die Klasse `MyBatchDemoApplication.java` starten.
 
-#### Bereinigung nach jedem Batch-Durchlauf
+## Bereinigung nach jedem Batch-Durchlauf
 
 Spring Batch und Flyway arbeiten mit temporären Daten, Metadaten und Zwischenergebnissen.
-
 Da die Anwendung zusätzlich Daten in eine eingebettete H2-Datenbank schreibt, 
 sollten die Datenordner nach jedem Durchlauf bereinigt werden. 
 Andernfalls können veraltete Daten oder Batch-Metadaten zu inkonsistentem Verhalten führen.
@@ -139,6 +138,26 @@ rm -rf data && mkdir data
 
 Wird die Anwendung hingegen über Docker gestartet, muss der `data`-Ordner nicht manuell bereinigt werden, 
 da die Daten innerhalb des Containers verwaltet und beim Entfernen des Containers automatisch gelöscht werden.
+
+
+## Tests ausführen
+
+Für das Projekt wurden Unit- und Integrationstests implementiert.
+Die Tests befinden sich im Verzeichnis: `src/test/java`
+
+### Voraussetzungen für lokale Testausführung
+
+Für die lokale Ausführung der Tests werden folgende Komponenten benötigt:
+- Java 21 (JDK 21)
+- Maven 3.9+ oder alternativ der enthaltene Maven Wrapper `./mvnw`
+
+Die Tests können auch beispielsweise mit folgendem Befehl gestartet werden:
+
+```bash
+./mvnw test
+```
+
+Docker wird für die lokale Ausführung der Tests nicht benötigt.
 
 ## Zugriff auf die Einträge der H2-Datenbank
 
