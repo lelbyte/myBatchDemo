@@ -50,16 +50,15 @@ src/main/java/com/example/myBatchDemo
 ```text
 src/main/resources
 │
-├── db.migration      # Datenbank-Migrationsskripte
-├── input             # Eingabedateien
-└── application.yaml  # Anwendungskonfiguration
+├── db.migration            # Datenbank-Migrationsskripte
+├── input                   # Eingabedateien
+└── application.yaml        # Anwendungskonfiguration
+└── application-test.yaml   # Anwendungskonfiguration für Test-Klassen
 ```
-### Batch-Verarbeitungsablauf
+### Batch-Verarbeitungsablauf mit BPMN-Diagramm
 
 Herzstück der Anwendung ist der Batch-Job 
 [`AmazonOrdersJobConfiguration`](src/main/java/com/example/myBatchDemo/AmazonOrdersJobConfiguration.java).
-
-#### BPMN Model
 
 Im docs-Ordner befindet sich ein mit Camunda Modeler (Version 7) erstelltes BPMN-Diagramm, das den Ablauf 
 des Batch-Jobs visualisiert. Der Fokus liegt dabei auf der Prozesslogik sowie den jeweiligen Input- und Output-Quellen 
@@ -82,6 +81,8 @@ Listener wurden bewusst nicht modelliert, da sie primär für Logging, Monitorin
 ### Configuration
 
 Die Anwendungskonfiguration befindet hier: [`application.yaml`](src/main/resources/application.yaml)
+Die Anwendungskonfiguration für Testklassen befindet hier: 
+[`application-test.yaml`](src/main/resources/application-test.yaml)
 
 ### Eingabedateien
 
