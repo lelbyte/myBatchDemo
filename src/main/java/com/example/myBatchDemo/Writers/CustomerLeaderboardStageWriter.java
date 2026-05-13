@@ -37,7 +37,7 @@ public class CustomerLeaderboardStageWriter implements ItemStreamWriter<Leaderbo
             jdbcTemplate.update("""
                         MERGE INTO customer_leaderboard_stage (customer_id, total_amount)
                         KEY (customer_id)
-                        VALUES (?, COALESCE((SELECT total_amount FROM customer_leaderboard_stage 
+                        VALUES (?, COALESCE((SELECT total_amount FROM customer_leaderboard_stage
                         WHERE customer_id = ?), 0) + ?)
                     """, e.getKey(), e.getKey(), e.getValue());
         }
