@@ -18,7 +18,9 @@ public class CustomerLeaderboardStageWriter implements ItemStreamWriter<Leaderbo
     private final JdbcTemplate jdbcTemplate;
 
     public CustomerLeaderboardStageWriter(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource); // todo ist es kostspielig immer JdbcTemplate zu kreierein?
+        // ist es kostspielig immer JdbcTemplate zu kreierein?
+        // -> Nein, erstellt nur ein leichtgewichtiges Spring-Helper-Objekt.
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
@@ -35,7 +37,8 @@ public class CustomerLeaderboardStageWriter implements ItemStreamWriter<Leaderbo
             jdbcTemplate.update("""
                         MERGE INTO customer_leaderboard_stage (customer_id, total_amount)
                         KEY (customer_id)
-                        VALUES (?, COALESCE((SELECT total_amount FROM customer_leaderboard_stage WHERE customer_id = ?), 0) + ?)
+                        VALUES (?, COALESCE((SELECT total_amount FROM customer_leaderboard_stage 
+                        WHERE customer_id = ?), 0) + ?)
                     """, e.getKey(), e.getKey(), e.getValue());
         }
 
