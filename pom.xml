@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.6</version>
+		<version>3.5.14</version>
 		<relativePath/>
 	</parent>
 
@@ -20,8 +20,32 @@
 
 	<properties>
 		<java.version>21</java.version>
+		<commons-compress.version>1.28.0</commons-compress.version>
+		<commons-lang3.version>3.20.0</commons-lang3.version>
+		<assertj.version>3.27.7</assertj.version>
 		<!--<spring-batch.version>5.0.1</spring-batch.version>-->
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-compress</artifactId>
+				<version>${commons-compress.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>${assertj.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<!-- Spring Boot Starters -->
@@ -221,8 +245,8 @@
 							<version>0.2.0</version>
 						</path>
 					</annotationProcessorPaths>
-					<source>25</source>
-					<target>25</target>
+					<source>21</source>
+					<target>21</target>
 				</configuration>
 			</plugin>
 		</plugins>
