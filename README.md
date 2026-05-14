@@ -80,9 +80,8 @@ Listener wurden bewusst nicht modelliert, da sie primär für Logging, Monitorin
 
 ### Configuration
 
-Die Anwendungskonfiguration befindet hier: [`application.yaml`](src/main/resources/application.yaml)
-Die Anwendungskonfiguration für Testklassen befindet hier: 
-[`application-test.yaml`](src/main/resources/application-test.yaml)
+Die Anwendungskonfiguration befindet sich hier: [`application.yaml`](src/main/resources/application.yaml).
+Die Anwendungskonfiguration für Testklassen befindet sich hier:[`application-test.yaml`](src/main/resources/application-test.yaml)
 
 ### Eingabedateien
 
