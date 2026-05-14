@@ -11,24 +11,226 @@
         <bpmn:flowNodeRef>Activity_0n8gbig</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_005f57h" name="Report Revenue">
+        <bpmn:flowNodeRef>Gateway_1rnythm</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_10tjm2v</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_1owsrtp</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_1ajamao</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_1o5sq60</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0jrw2m3</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_163al0g</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_1ttbfo9</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_15ghsta</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_10n72dy" name="Enrichment">
         <bpmn:flowNodeRef>Activity_0mp3fmy</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_1jjobdm" name="Create Leaderboard">
-        <bpmn:flowNodeRef>Activity_0ux16ht</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_0iakddg</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0j03em8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0ux16ht</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_1uxjwgn</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
+    <bpmn:sequenceFlow id="Flow_1d72zpu" sourceRef="Activity_0ux16ht" targetRef="Activity_1uxjwgn" />
+    <bpmn:sequenceFlow id="Flow_08068z1" sourceRef="Activity_1uxjwgn" targetRef="Activity_0j03em8" />
+    <bpmn:sequenceFlow id="Flow_0x2t13e" name="Exit Status != NO_REVENUE" sourceRef="Gateway_163al0g" targetRef="Activity_0jrw2m3" />
+    <bpmn:sequenceFlow id="Flow_1g7swcy" name="Exit Status == NO_REVENUE" sourceRef="Gateway_163al0g" targetRef="Activity_1o5sq60" />
+    <bpmn:sequenceFlow id="Flow_18sga0p" sourceRef="Event_1ucktmi" targetRef="Activity_0n8gbig" />
+    <bpmn:sequenceFlow id="Flow_1p8pm5p" sourceRef="Gateway_1ajamao" targetRef="Activity_0ux16ht" />
+    <bpmn:sequenceFlow id="Flow_1pxxahd" sourceRef="Activity_0mp3fmy" targetRef="Gateway_1ajamao" />
+    <bpmn:sequenceFlow id="Flow_1msgpnl" sourceRef="Activity_0n8gbig" targetRef="Activity_0mp3fmy" />
+    <bpmn:sequenceFlow id="Flow_1tca39g" sourceRef="Activity_1owsrtp" targetRef="Gateway_163al0g" />
+    <bpmn:sequenceFlow id="Flow_179k1en" sourceRef="Gateway_1ajamao" targetRef="Activity_1owsrtp" />
+    <bpmn:subProcess id="Activity_1uxjwgn" name="leaderboardMasterStep">
+      <bpmn:incoming>Flow_1d72zpu</bpmn:incoming>
+      <bpmn:outgoing>Flow_08068z1</bpmn:outgoing>
+      <bpmn:startEvent id="Event_1y88ryq">
+        <bpmn:outgoing>Flow_0k9k41k</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:task id="Activity_02ynm4o" name="leaderboard&#10;SlaveStep">
+        <bpmn:incoming>Flow_0k9k41k</bpmn:incoming>
+        <bpmn:outgoing>Flow_0ea93uq</bpmn:outgoing>
+        <bpmn:multiInstanceLoopCharacteristics />
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_0k9k41k" sourceRef="Event_1y88ryq" targetRef="Activity_02ynm4o" />
+      <bpmn:endEvent id="Event_1xdf6k6">
+        <bpmn:incoming>Flow_0ea93uq</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0ea93uq" sourceRef="Activity_02ynm4o" targetRef="Event_1xdf6k6" />
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_0ux16ht" name="prepareLeaderboardStep">
+      <bpmn:incoming>Flow_1p8pm5p</bpmn:incoming>
+      <bpmn:outgoing>Flow_1d72zpu</bpmn:outgoing>
+      <bpmn:startEvent id="Event_07par97">
+        <bpmn:outgoing>Flow_1lieshy</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:task id="Activity_1o90sl8" name="prepare&#10;Leaderboard&#10;Tasklet">
+        <bpmn:incoming>Flow_1lieshy</bpmn:incoming>
+        <bpmn:outgoing>Flow_03u6xyu</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_02a9hit">
+          <bpmn:targetRef>DataStoreReference_1if9i70</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_1lieshy" sourceRef="Event_07par97" targetRef="Activity_1o90sl8" />
+      <bpmn:endEvent id="Event_0wuux8w">
+        <bpmn:incoming>Flow_03u6xyu</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_03u6xyu" sourceRef="Activity_1o90sl8" targetRef="Event_0wuux8w" />
+      <bpmn:dataStoreReference id="DataStoreReference_1if9i70" />
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_0j03em8" name="exportLeaderboardXmlStep">
+      <bpmn:incoming>Flow_08068z1</bpmn:incoming>
+      <bpmn:outgoing>Flow_153yw99</bpmn:outgoing>
+      <bpmn:startEvent id="Event_1vwo1y5">
+        <bpmn:outgoing>Flow_0xjbopk</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:task id="Activity_0sfbh4d" name="customerLeaderboardStage&#10;Reader">
+        <bpmn:incoming>Flow_0xjbopk</bpmn:incoming>
+        <bpmn:outgoing>Flow_1vank3j</bpmn:outgoing>
+        <bpmn:property id="Property_1maijmv" name="__targetRef_placeholder" />
+        <bpmn:dataInputAssociation id="DataInputAssociation_0gh46g6">
+          <bpmn:sourceRef>DataStoreReference_0rqdk91</bpmn:sourceRef>
+          <bpmn:targetRef>Property_1maijmv</bpmn:targetRef>
+        </bpmn:dataInputAssociation>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_0xjbopk" sourceRef="Event_1vwo1y5" targetRef="Activity_0sfbh4d" />
+      <bpmn:task id="Activity_03cr27d" name="leaderboardXml&#10;Processor">
+        <bpmn:incoming>Flow_1vank3j</bpmn:incoming>
+        <bpmn:outgoing>Flow_0gu8r80</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_1vank3j" sourceRef="Activity_0sfbh4d" targetRef="Activity_03cr27d" />
+      <bpmn:task id="Activity_0lnqsba" name="leaderboardXmlWriter">
+        <bpmn:incoming>Flow_0gu8r80</bpmn:incoming>
+        <bpmn:outgoing>Flow_0z80bsv</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_1twhcsd">
+          <bpmn:targetRef>DataObjectReference_1lxahic</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_0gu8r80" sourceRef="Activity_03cr27d" targetRef="Activity_0lnqsba" />
+      <bpmn:endEvent id="Event_1fjoa2k">
+        <bpmn:incoming>Flow_0z80bsv</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0z80bsv" sourceRef="Activity_0lnqsba" targetRef="Event_1fjoa2k" />
+      <bpmn:dataStoreReference id="DataStoreReference_0rqdk91" />
+      <bpmn:dataObjectReference id="DataObjectReference_1lxahic" name="customer-leaderboard.xml" dataObjectRef="DataObject_0dfqfkp" />
+      <bpmn:dataObject id="DataObject_0dfqfkp" />
+    </bpmn:subProcess>
+    <bpmn:exclusiveGateway id="Gateway_163al0g" name="Exit Status">
+      <bpmn:incoming>Flow_1tca39g</bpmn:incoming>
+      <bpmn:outgoing>Flow_1g7swcy</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0x2t13e</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:subProcess id="Activity_0jrw2m3" name="emailStep">
+      <bpmn:incoming>Flow_0x2t13e</bpmn:incoming>
+      <bpmn:startEvent id="Event_1dx3a7l">
+        <bpmn:outgoing>Flow_1619typ</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:task id="Activity_0a0bl53" name="emailRevenue&#10;ReportTasklet">
+        <bpmn:incoming>Flow_1619typ</bpmn:incoming>
+        <bpmn:outgoing>Flow_0cr72r1</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_1619typ" sourceRef="Event_1dx3a7l" targetRef="Activity_0a0bl53" />
+      <bpmn:endEvent id="Event_04pst0w">
+        <bpmn:incoming>Flow_0cr72r1</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0cr72r1" sourceRef="Activity_0a0bl53" targetRef="Event_04pst0w" />
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_1o5sq60" name="noRevenueStep">
+      <bpmn:incoming>Flow_1g7swcy</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tcabvk</bpmn:outgoing>
+      <bpmn:startEvent id="Event_1k8p3qb">
+        <bpmn:outgoing>Flow_11ens28</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:task id="Activity_0ezzzy6" name="noRevenue&#10;Tasklet">
+        <bpmn:incoming>Flow_11ens28</bpmn:incoming>
+        <bpmn:outgoing>Flow_04mcsk0</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_11ens28" sourceRef="Event_1k8p3qb" targetRef="Activity_0ezzzy6" />
+      <bpmn:endEvent id="Event_1l67s7y">
+        <bpmn:incoming>Flow_04mcsk0</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_04mcsk0" sourceRef="Activity_0ezzzy6" targetRef="Event_1l67s7y" />
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_0n8gbig" name="validateAndLoadOrdersStep">
+      <bpmn:incoming>Flow_18sga0p</bpmn:incoming>
+      <bpmn:outgoing>Flow_1msgpnl</bpmn:outgoing>
+      <bpmn:startEvent id="Event_0qd4c6p">
+        <bpmn:outgoing>Flow_0y9d2lj</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:task id="Activity_160snje" name="amazonOrder&#10;CsvReader">
+        <bpmn:incoming>Flow_0y9d2lj</bpmn:incoming>
+        <bpmn:outgoing>Flow_0rkzc96</bpmn:outgoing>
+        <bpmn:property id="Property_1v9faoe" name="__targetRef_placeholder" />
+        <bpmn:dataInputAssociation id="DataInputAssociation_1l9bmx3">
+          <bpmn:sourceRef>DataStoreReference_18lvvrk</bpmn:sourceRef>
+          <bpmn:targetRef>Property_1v9faoe</bpmn:targetRef>
+        </bpmn:dataInputAssociation>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_0y9d2lj" sourceRef="Event_0qd4c6p" targetRef="Activity_160snje" />
+      <bpmn:task id="Activity_0vr99fr" name="validateAmazon&#10;Order&#10;Processor">
+        <bpmn:incoming>Flow_0rkzc96</bpmn:incoming>
+        <bpmn:outgoing>Flow_1cb8t2b</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_0rkzc96" sourceRef="Activity_160snje" targetRef="Activity_0vr99fr" />
+      <bpmn:task id="Activity_0ttagxv" name="amazonOrder&#10;DBWriter">
+        <bpmn:incoming>Flow_1cb8t2b</bpmn:incoming>
+        <bpmn:outgoing>Flow_0e8emod</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_1xxckig">
+          <bpmn:targetRef>DataStoreReference_0lvt9d9</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_1cb8t2b" sourceRef="Activity_0vr99fr" targetRef="Activity_0ttagxv" />
+      <bpmn:dataStoreReference id="DataStoreReference_0lvt9d9" />
+      <bpmn:endEvent id="Event_0up952j">
+        <bpmn:incoming>Flow_0e8emod</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0e8emod" sourceRef="Activity_0ttagxv" targetRef="Event_0up952j" />
+      <bpmn:dataObjectReference id="DataStoreReference_18lvvrk" name="my-amazon-orders.csv" dataObjectRef="DataObject_1ffhf6r" />
+      <bpmn:dataObject id="DataObject_1ffhf6r" />
+    </bpmn:subProcess>
+    <bpmn:startEvent id="Event_1ucktmi">
+      <bpmn:outgoing>Flow_18sga0p</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:parallelGateway id="Gateway_1ajamao">
+      <bpmn:incoming>Flow_1pxxahd</bpmn:incoming>
+      <bpmn:outgoing>Flow_179k1en</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1p8pm5p</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:subProcess id="Activity_0mp3fmy" name="enrichOrdersStep">
+      <bpmn:incoming>Flow_1msgpnl</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pxxahd</bpmn:outgoing>
+      <bpmn:startEvent id="Event_0xlb2z1">
+        <bpmn:outgoing>Flow_0su4rb7</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:task id="Activity_0ktwuxh" name="amazonOrder&#10;DbReader">
+        <bpmn:incoming>Flow_0su4rb7</bpmn:incoming>
+        <bpmn:outgoing>Flow_0aygywe</bpmn:outgoing>
+        <bpmn:property id="Property_08s812o" name="__targetRef_placeholder" />
+        <bpmn:dataInputAssociation id="DataInputAssociation_0t697l1">
+          <bpmn:sourceRef>DataStoreReference_1dkb9li</bpmn:sourceRef>
+          <bpmn:targetRef>Property_08s812o</bpmn:targetRef>
+        </bpmn:dataInputAssociation>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_0su4rb7" sourceRef="Event_0xlb2z1" targetRef="Activity_0ktwuxh" />
+      <bpmn:task id="Activity_1qq9g1h" name="asyncEnrich&#10;Order&#10;Processor">
+        <bpmn:incoming>Flow_0aygywe</bpmn:incoming>
+        <bpmn:outgoing>Flow_113h9m0</bpmn:outgoing>
+        <bpmn:multiInstanceLoopCharacteristics />
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_0aygywe" sourceRef="Activity_0ktwuxh" targetRef="Activity_1qq9g1h" />
+      <bpmn:task id="Activity_0cy7vfq" name="asyncAmazonOrderEnrichmentWriter">
+        <bpmn:incoming>Flow_113h9m0</bpmn:incoming>
+        <bpmn:outgoing>Flow_0v4gvxo</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_10ywx8o">
+          <bpmn:targetRef>DataStoreReference_16352lh</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+        <bpmn:multiInstanceLoopCharacteristics />
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_113h9m0" sourceRef="Activity_1qq9g1h" targetRef="Activity_0cy7vfq" />
+      <bpmn:endEvent id="Event_0jrsvcz">
+        <bpmn:incoming>Flow_0v4gvxo</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0v4gvxo" sourceRef="Activity_0cy7vfq" targetRef="Event_0jrsvcz" />
+      <bpmn:dataStoreReference id="DataStoreReference_1dkb9li" />
+      <bpmn:dataStoreReference id="DataStoreReference_16352lh" />
+    </bpmn:subProcess>
     <bpmn:subProcess id="Activity_1owsrtp" name="reportRevenueStep">
       <bpmn:incoming>Flow_179k1en</bpmn:incoming>
       <bpmn:outgoing>Flow_1tca39g</bpmn:outgoing>
@@ -88,244 +290,45 @@
       <bpmn:dataObject id="DataObject_0dtez3a" />
       <bpmn:dataStoreReference id="DataStoreReference_1aytftp" />
     </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_0mp3fmy" name="enrichOrdersStep">
-      <bpmn:incoming>Flow_1msgpnl</bpmn:incoming>
-      <bpmn:outgoing>Flow_1pxxahd</bpmn:outgoing>
-      <bpmn:startEvent id="Event_0xlb2z1">
-        <bpmn:outgoing>Flow_0su4rb7</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:task id="Activity_0ktwuxh" name="amazonOrder&#10;DbReader">
-        <bpmn:incoming>Flow_0su4rb7</bpmn:incoming>
-        <bpmn:outgoing>Flow_0aygywe</bpmn:outgoing>
-        <bpmn:property id="Property_08s812o" name="__targetRef_placeholder" />
-        <bpmn:dataInputAssociation id="DataInputAssociation_0t697l1">
-          <bpmn:sourceRef>DataStoreReference_1dkb9li</bpmn:sourceRef>
-          <bpmn:targetRef>Property_08s812o</bpmn:targetRef>
-        </bpmn:dataInputAssociation>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_0su4rb7" sourceRef="Event_0xlb2z1" targetRef="Activity_0ktwuxh" />
-      <bpmn:task id="Activity_1qq9g1h" name="asyncEnrich&#10;Order&#10;Processor">
-        <bpmn:incoming>Flow_0aygywe</bpmn:incoming>
-        <bpmn:outgoing>Flow_113h9m0</bpmn:outgoing>
-        <bpmn:multiInstanceLoopCharacteristics />
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_0aygywe" sourceRef="Activity_0ktwuxh" targetRef="Activity_1qq9g1h" />
-      <bpmn:task id="Activity_0cy7vfq" name="asyncAmazonOrderEnrichmentWriter">
-        <bpmn:incoming>Flow_113h9m0</bpmn:incoming>
-        <bpmn:outgoing>Flow_0v4gvxo</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_10ywx8o">
-          <bpmn:targetRef>DataStoreReference_16352lh</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-        <bpmn:multiInstanceLoopCharacteristics />
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_113h9m0" sourceRef="Activity_1qq9g1h" targetRef="Activity_0cy7vfq" />
-      <bpmn:endEvent id="Event_0jrsvcz">
-        <bpmn:incoming>Flow_0v4gvxo</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0v4gvxo" sourceRef="Activity_0cy7vfq" targetRef="Event_0jrsvcz" />
-      <bpmn:dataStoreReference id="DataStoreReference_1dkb9li" />
-      <bpmn:dataStoreReference id="DataStoreReference_16352lh" />
-    </bpmn:subProcess>
-    <bpmn:parallelGateway id="Gateway_1ajamao">
-      <bpmn:incoming>Flow_1pxxahd</bpmn:incoming>
-      <bpmn:outgoing>Flow_179k1en</bpmn:outgoing>
-      <bpmn:outgoing>Flow_1p8pm5p</bpmn:outgoing>
+    <bpmn:sequenceFlow id="Flow_0tcabvk" sourceRef="Activity_1o5sq60" targetRef="Gateway_1rnythm" />
+    <bpmn:sequenceFlow id="Flow_153yw99" sourceRef="Activity_0j03em8" targetRef="Gateway_1rnythm" />
+    <bpmn:parallelGateway id="Gateway_1rnythm">
+      <bpmn:incoming>Flow_0tcabvk</bpmn:incoming>
+      <bpmn:incoming>Flow_153yw99</bpmn:incoming>
+      <bpmn:outgoing>Flow_104v4rr</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:startEvent id="Event_1ucktmi">
-      <bpmn:outgoing>Flow_18sga0p</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:subProcess id="Activity_0n8gbig" name="validateAndLoadOrdersStep">
-      <bpmn:incoming>Flow_18sga0p</bpmn:incoming>
-      <bpmn:outgoing>Flow_1msgpnl</bpmn:outgoing>
-      <bpmn:startEvent id="Event_0qd4c6p">
-        <bpmn:outgoing>Flow_0y9d2lj</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:task id="Activity_160snje" name="amazonOrder&#10;CsvReader">
-        <bpmn:incoming>Flow_0y9d2lj</bpmn:incoming>
-        <bpmn:outgoing>Flow_0rkzc96</bpmn:outgoing>
-        <bpmn:property id="Property_1v9faoe" name="__targetRef_placeholder" />
-        <bpmn:dataInputAssociation id="DataInputAssociation_1l9bmx3">
-          <bpmn:sourceRef>DataStoreReference_18lvvrk</bpmn:sourceRef>
-          <bpmn:targetRef>Property_1v9faoe</bpmn:targetRef>
-        </bpmn:dataInputAssociation>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_0y9d2lj" sourceRef="Event_0qd4c6p" targetRef="Activity_160snje" />
-      <bpmn:task id="Activity_0vr99fr" name="validateAmazon&#10;Order&#10;Processor">
-        <bpmn:incoming>Flow_0rkzc96</bpmn:incoming>
-        <bpmn:outgoing>Flow_1cb8t2b</bpmn:outgoing>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_0rkzc96" sourceRef="Activity_160snje" targetRef="Activity_0vr99fr" />
-      <bpmn:task id="Activity_0ttagxv" name="amazonOrder&#10;DBWriter">
-        <bpmn:incoming>Flow_1cb8t2b</bpmn:incoming>
-        <bpmn:outgoing>Flow_0e8emod</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_1xxckig">
-          <bpmn:targetRef>DataStoreReference_0lvt9d9</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_1cb8t2b" sourceRef="Activity_0vr99fr" targetRef="Activity_0ttagxv" />
-      <bpmn:dataStoreReference id="DataStoreReference_0lvt9d9" />
-      <bpmn:endEvent id="Event_0up952j">
-        <bpmn:incoming>Flow_0e8emod</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0e8emod" sourceRef="Activity_0ttagxv" targetRef="Event_0up952j" />
-      <bpmn:dataObjectReference id="DataStoreReference_18lvvrk" name="my-amazon-orders.csv" dataObjectRef="DataObject_1ffhf6r" />
-      <bpmn:dataObject id="DataObject_1ffhf6r" />
-    </bpmn:subProcess>
-    <bpmn:sequenceFlow id="Flow_1tca39g" sourceRef="Activity_1owsrtp" targetRef="Gateway_163al0g" />
-    <bpmn:sequenceFlow id="Flow_179k1en" sourceRef="Gateway_1ajamao" targetRef="Activity_1owsrtp" />
-    <bpmn:sequenceFlow id="Flow_1msgpnl" sourceRef="Activity_0n8gbig" targetRef="Activity_0mp3fmy" />
-    <bpmn:sequenceFlow id="Flow_1pxxahd" sourceRef="Activity_0mp3fmy" targetRef="Gateway_1ajamao" />
-    <bpmn:sequenceFlow id="Flow_18sga0p" sourceRef="Event_1ucktmi" targetRef="Activity_0n8gbig" />
-    <bpmn:sequenceFlow id="Flow_1p8pm5p" sourceRef="Gateway_1ajamao" targetRef="Activity_0ux16ht" />
-    <bpmn:subProcess id="Activity_1o5sq60" name="noRevenueStep">
-      <bpmn:incoming>Flow_1g7swcy</bpmn:incoming>
-      <bpmn:outgoing>Flow_1kwgki3</bpmn:outgoing>
-      <bpmn:startEvent id="Event_1k8p3qb">
-        <bpmn:outgoing>Flow_11ens28</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:task id="Activity_0ezzzy6" name="noRevenue&#10;Tasklet">
-        <bpmn:incoming>Flow_11ens28</bpmn:incoming>
-        <bpmn:outgoing>Flow_04mcsk0</bpmn:outgoing>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_11ens28" sourceRef="Event_1k8p3qb" targetRef="Activity_0ezzzy6" />
-      <bpmn:endEvent id="Event_1l67s7y">
-        <bpmn:incoming>Flow_04mcsk0</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_04mcsk0" sourceRef="Activity_0ezzzy6" targetRef="Event_1l67s7y" />
-    </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_0jrw2m3" name="emailStep">
-      <bpmn:incoming>Flow_0x2t13e</bpmn:incoming>
-      <bpmn:outgoing>Flow_16kcrn8</bpmn:outgoing>
-      <bpmn:startEvent id="Event_1dx3a7l">
-        <bpmn:outgoing>Flow_1619typ</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:task id="Activity_0a0bl53" name="emailRevenue&#10;ReportTasklet">
-        <bpmn:incoming>Flow_1619typ</bpmn:incoming>
-        <bpmn:outgoing>Flow_0cr72r1</bpmn:outgoing>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_1619typ" sourceRef="Event_1dx3a7l" targetRef="Activity_0a0bl53" />
-      <bpmn:endEvent id="Event_04pst0w">
-        <bpmn:incoming>Flow_0cr72r1</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0cr72r1" sourceRef="Activity_0a0bl53" targetRef="Event_04pst0w" />
-    </bpmn:subProcess>
-    <bpmn:exclusiveGateway id="Gateway_163al0g" name="Exit Status">
-      <bpmn:incoming>Flow_1tca39g</bpmn:incoming>
-      <bpmn:outgoing>Flow_1g7swcy</bpmn:outgoing>
-      <bpmn:outgoing>Flow_0x2t13e</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_1g7swcy" name="Exit Status == NO_REVENUE" sourceRef="Gateway_163al0g" targetRef="Activity_1o5sq60" />
-    <bpmn:sequenceFlow id="Flow_1kwgki3" sourceRef="Activity_1o5sq60" targetRef="Event_1ttbfo9" />
-    <bpmn:sequenceFlow id="Flow_0x2t13e" name="Exit Status != NO_REVENUE" sourceRef="Gateway_163al0g" targetRef="Activity_0jrw2m3" />
-    <bpmn:sequenceFlow id="Flow_16kcrn8" sourceRef="Activity_0jrw2m3" targetRef="Event_15ghsta" />
-    <bpmn:endEvent id="Event_1ttbfo9">
-      <bpmn:incoming>Flow_1kwgki3</bpmn:incoming>
+    <bpmn:sequenceFlow id="Flow_104v4rr" sourceRef="Gateway_1rnythm" targetRef="Event_10tjm2v" />
+    <bpmn:endEvent id="Event_10tjm2v">
+      <bpmn:incoming>Flow_104v4rr</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:endEvent id="Event_15ghsta">
-      <bpmn:incoming>Flow_16kcrn8</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_00piwfh" sourceRef="Activity_0j03em8" targetRef="Event_0iakddg" />
-    <bpmn:sequenceFlow id="Flow_08068z1" sourceRef="Activity_1uxjwgn" targetRef="Activity_0j03em8" />
-    <bpmn:sequenceFlow id="Flow_1d72zpu" sourceRef="Activity_0ux16ht" targetRef="Activity_1uxjwgn" />
-    <bpmn:endEvent id="Event_0iakddg">
-      <bpmn:incoming>Flow_00piwfh</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:subProcess id="Activity_0j03em8" name="exportLeaderboardXmlStep">
-      <bpmn:incoming>Flow_08068z1</bpmn:incoming>
-      <bpmn:outgoing>Flow_00piwfh</bpmn:outgoing>
-      <bpmn:startEvent id="Event_1vwo1y5">
-        <bpmn:outgoing>Flow_0xjbopk</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:task id="Activity_0sfbh4d" name="customerLeaderboardStage&#10;Reader">
-        <bpmn:incoming>Flow_0xjbopk</bpmn:incoming>
-        <bpmn:outgoing>Flow_1vank3j</bpmn:outgoing>
-        <bpmn:property id="Property_1maijmv" name="__targetRef_placeholder" />
-        <bpmn:dataInputAssociation id="DataInputAssociation_0gh46g6">
-          <bpmn:sourceRef>DataStoreReference_0rqdk91</bpmn:sourceRef>
-          <bpmn:targetRef>Property_1maijmv</bpmn:targetRef>
-        </bpmn:dataInputAssociation>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_0xjbopk" sourceRef="Event_1vwo1y5" targetRef="Activity_0sfbh4d" />
-      <bpmn:task id="Activity_03cr27d" name="leaderboardXml&#10;Processor">
-        <bpmn:incoming>Flow_1vank3j</bpmn:incoming>
-        <bpmn:outgoing>Flow_0gu8r80</bpmn:outgoing>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_1vank3j" sourceRef="Activity_0sfbh4d" targetRef="Activity_03cr27d" />
-      <bpmn:task id="Activity_0lnqsba" name="leaderboardXmlWriter">
-        <bpmn:incoming>Flow_0gu8r80</bpmn:incoming>
-        <bpmn:outgoing>Flow_0z80bsv</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_1twhcsd">
-          <bpmn:targetRef>DataObjectReference_1lxahic</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_0gu8r80" sourceRef="Activity_03cr27d" targetRef="Activity_0lnqsba" />
-      <bpmn:endEvent id="Event_1fjoa2k">
-        <bpmn:incoming>Flow_0z80bsv</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0z80bsv" sourceRef="Activity_0lnqsba" targetRef="Event_1fjoa2k" />
-      <bpmn:dataStoreReference id="DataStoreReference_0rqdk91" />
-      <bpmn:dataObjectReference id="DataObjectReference_1lxahic" name="customer-leaderboard.xml" dataObjectRef="DataObject_0dfqfkp" />
-      <bpmn:dataObject id="DataObject_0dfqfkp" />
-    </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_0ux16ht" name="prepareLeaderboardStep">
-      <bpmn:incoming>Flow_1p8pm5p</bpmn:incoming>
-      <bpmn:outgoing>Flow_1d72zpu</bpmn:outgoing>
-      <bpmn:startEvent id="Event_07par97">
-        <bpmn:outgoing>Flow_1lieshy</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:task id="Activity_1o90sl8" name="prepare&#10;Leaderboard&#10;Tasklet">
-        <bpmn:incoming>Flow_1lieshy</bpmn:incoming>
-        <bpmn:outgoing>Flow_03u6xyu</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_02a9hit">
-          <bpmn:targetRef>DataStoreReference_1if9i70</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_1lieshy" sourceRef="Event_07par97" targetRef="Activity_1o90sl8" />
-      <bpmn:endEvent id="Event_0wuux8w">
-        <bpmn:incoming>Flow_03u6xyu</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_03u6xyu" sourceRef="Activity_1o90sl8" targetRef="Event_0wuux8w" />
-      <bpmn:dataStoreReference id="DataStoreReference_1if9i70" />
-    </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_1uxjwgn" name="leaderboardMasterStep">
-      <bpmn:incoming>Flow_1d72zpu</bpmn:incoming>
-      <bpmn:outgoing>Flow_08068z1</bpmn:outgoing>
-      <bpmn:startEvent id="Event_1y88ryq">
-        <bpmn:outgoing>Flow_0k9k41k</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:task id="Activity_02ynm4o" name="leaderboard&#10;SlaveStep">
-        <bpmn:incoming>Flow_0k9k41k</bpmn:incoming>
-        <bpmn:outgoing>Flow_0ea93uq</bpmn:outgoing>
-        <bpmn:multiInstanceLoopCharacteristics />
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_0k9k41k" sourceRef="Event_1y88ryq" targetRef="Activity_02ynm4o" />
-      <bpmn:endEvent id="Event_1xdf6k6">
-        <bpmn:incoming>Flow_0ea93uq</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0ea93uq" sourceRef="Activity_02ynm4o" targetRef="Event_1xdf6k6" />
-    </bpmn:subProcess>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0e8kd94">
       <bpmndi:BPMNShape id="Participant_1pv66eb_di" bpmnElement="Participant_1pv66eb" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="2060" height="1470" />
+        <dc:Bounds x="160" y="80" width="2200" height="1470" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1jjobdm_di" bpmnElement="Lane_1jjobdm" isHorizontal="true">
-        <dc:Bounds x="190" y="1190" width="2030" height="360" />
+        <dc:Bounds x="190" y="1190" width="2170" height="360" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_10n72dy_di" bpmnElement="Lane_10n72dy" isHorizontal="true">
-        <dc:Bounds x="190" y="440" width="2030" height="270" />
+        <dc:Bounds x="190" y="440" width="2170" height="270" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_005f57h_di" bpmnElement="Lane_005f57h" isHorizontal="true">
-        <dc:Bounds x="190" y="710" width="2030" height="480" />
+        <dc:Bounds x="190" y="710" width="2170" height="480" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1i0clkk_di" bpmnElement="Lane_1i0clkk" isHorizontal="true">
-        <dc:Bounds x="190" y="80" width="2030" height="360" />
+        <dc:Bounds x="190" y="80" width="2170" height="360" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_07l783a_di" bpmnElement="Gateway_1rnythm" bioc:stroke="#6b3c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#6b3c00">
+        <dc:Bounds x="2165" y="1035" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10tjm2v_di" bpmnElement="Event_10tjm2v" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="2282" y="1042" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1po7kn3_di" bpmnElement="Activity_1owsrtp" isExpanded="true">
         <dc:Bounds x="390" y="735" width="950" height="405" />
@@ -447,10 +450,6 @@
         <di:waypoint x="940" y="570" />
         <di:waypoint x="1002" y="570" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataOutputAssociation_10ywx8o_di" bpmnElement="DataOutputAssociation_10ywx8o">
-        <di:waypoint x="936" y="607" />
-        <di:waypoint x="965" y="630" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_1ajamao_di" bpmnElement="Gateway_1ajamao" bioc:stroke="#6b3c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#6b3c00">
         <dc:Bounds x="295" y="755" width="50" height="50" />
       </bpmndi:BPMNShape>
@@ -550,15 +549,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1519" y="781" width="53" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1ttbfo9_di" bpmnElement="Event_1ttbfo9" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
-        <dc:Bounds x="2117" y="812" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_15ghsta_di" bpmnElement="Event_15ghsta" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
-        <dc:Bounds x="2117" y="1042" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0iakddg_di" bpmnElement="Event_0iakddg" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
-        <dc:Bounds x="2117" y="1367" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1dygvh1_di" bpmnElement="Activity_0j03em8" isExpanded="true">
         <dc:Bounds x="1285" y="1240" width="760" height="260" />
@@ -686,10 +676,6 @@
           <dc:Bounds x="1587" y="786" width="76" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1kwgki3_di" bpmnElement="Flow_1kwgki3">
-        <di:waypoint x="2045" y="830" />
-        <di:waypoint x="2117" y="830" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0x2t13e_di" bpmnElement="Flow_0x2t13e">
         <di:waypoint x="1545" y="855" />
         <di:waypoint x="1545" y="1060" />
@@ -698,14 +684,6 @@
           <dc:Bounds x="1591" y="1026" width="76" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_16kcrn8_di" bpmnElement="Flow_16kcrn8">
-        <di:waypoint x="2045" y="1060" />
-        <di:waypoint x="2117" y="1060" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_00piwfh_di" bpmnElement="Flow_00piwfh">
-        <di:waypoint x="2045" y="1385" />
-        <di:waypoint x="2117" y="1385" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_08068z1_di" bpmnElement="Flow_08068z1">
         <di:waypoint x="1140" y="1340" />
         <di:waypoint x="1285" y="1340" />
@@ -713,6 +691,22 @@
       <bpmndi:BPMNEdge id="Flow_1d72zpu_di" bpmnElement="Flow_1d72zpu">
         <di:waypoint x="740" y="1330" />
         <di:waypoint x="790" y="1330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tcabvk_di" bpmnElement="Flow_0tcabvk">
+        <di:waypoint x="2045" y="830" />
+        <di:waypoint x="2105" y="830" />
+        <di:waypoint x="2105" y="1060" />
+        <di:waypoint x="2165" y="1060" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_153yw99_di" bpmnElement="Flow_153yw99">
+        <di:waypoint x="2045" y="1370" />
+        <di:waypoint x="2100" y="1370" />
+        <di:waypoint x="2100" y="1060" />
+        <di:waypoint x="2165" y="1060" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_104v4rr_di" bpmnElement="Flow_104v4rr">
+        <di:waypoint x="2215" y="1060" />
+        <di:waypoint x="2282" y="1060" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_036kyqu_di" bpmnElement="DataInputAssociation_036kyqu">
         <di:waypoint x="624" y="945" />
@@ -729,6 +723,10 @@
       <bpmndi:BPMNEdge id="DataInputAssociation_0t697l1_di" bpmnElement="DataInputAssociation_0t697l1">
         <di:waypoint x="655" y="632" />
         <di:waypoint x="618" y="606" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_10ywx8o_di" bpmnElement="DataOutputAssociation_10ywx8o">
+        <di:waypoint x="936" y="607" />
+        <di:waypoint x="965" y="630" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_1l9bmx3_di" bpmnElement="DataInputAssociation_1l9bmx3">
         <di:waypoint x="624" y="295" />
